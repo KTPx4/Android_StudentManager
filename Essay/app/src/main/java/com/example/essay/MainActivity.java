@@ -8,7 +8,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.essay.account.AdminInitializer;
+import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +23,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Khởi tạo Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Khởi tạo admin nếu chưa có
+        AdminInitializer adminInitializer = new AdminInitializer(db);
+        adminInitializer.initAdminAccount();
+
     }
 }
