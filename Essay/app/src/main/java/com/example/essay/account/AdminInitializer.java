@@ -19,7 +19,7 @@ public class AdminInitializer {
     public void initAdminAccount() {
         // Kiểm tra xem có tài khoản admin chưa
         db.collection("accounts")
-                .whereEqualTo("user", "admin")
+                .whereEqualTo("user", "admin2")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -36,10 +36,10 @@ public class AdminInitializer {
                 });
     }
 
-    private void createAdminAccount() {
+    private void createAdminAccount(){
         // Thông tin tài khoản admin
         String name = "Admin";
-        String user = "admin";
+        String user = "admin2";
         String pass = "admin"; //
         String phone = "123456789";
         String birthDay = "01/01/2003";
@@ -55,6 +55,7 @@ public class AdminInitializer {
         adminData.put("birthDay", birthDay);
         adminData.put("status", status);
         adminData.put("linkAvt", linkAvt);
+        adminData.put("role", "admin");
 
         // Thêm admin vào Firestore
         db.collection("accounts").add(adminData)

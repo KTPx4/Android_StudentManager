@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
+    <item
+
+        android:id="@+id/users"
+        android:title="Users"
+        android:icon="@drawable/ic_person_foreground"/>
+    <item
+        android:id="@+id/students"
+        android:title="Students"
+        android:icon="@drawable/ic_school_foreground"/>
+    <item
+
+        android:id="@+id/settings"
+        android:title="Settings"
+        android:icon="@drawable/ic_setting_foreground"/>
+</menu>
