@@ -11,18 +11,14 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.essay.account.AccountRepository;
-import com.example.essay.account.AdminInitializer;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView txtUser;
     private TextView txtPass;
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         getFromSharedPreferences();
         initProgram();
     }
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("Login", "Login successful");
                                 //txtErr.setText("đăng nhập thành công");
                                 saveTokenLocally(user, name, userRole);
-                                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 intent.putExtra("user", user);
                                 intent.putExtra("name", name);
                                 intent.putExtra("role", userRole);
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (username != null && role != null && name != null && !username.isEmpty() && !role.isEmpty() && !name.isEmpty())
         {
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             intent.putExtra("user", username);
             intent.putExtra("name", name);
             intent.putExtra("role", role);

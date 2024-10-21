@@ -3,12 +3,100 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/default_background"
     tools:context=".UserFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingHorizontal="30dp"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="User " />
+
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/btnAllUser"
+            android:background="@drawable/custom_btn_users"
+
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:text="0\nAll"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/blue"
+
+            android:layout_width="@dimen/btnUsers_width"
+            android:layout_height="@dimen/btnUsers_height"
+            />
+
+        <Button
+
+            android:id="@+id/btnManagerUser"
+            android:background="@drawable/custom_btn_users"
+
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintStart_toEndOf="@+id/btnAllUser"
+            app:layout_constraintEnd_toStartOf="@+id/btnEmployeeUser"
+
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:text="0\nManager"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/blue"
+
+            android:layout_width="@dimen/btnUsers_width"
+            android:layout_height="@dimen/btnUsers_height" />
+
+        <Button
+            android:id="@+id/btnEmployeeUser"
+            android:background="@drawable/custom_btn_users"
+
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:textAllCaps="false"
+            android:textSize="17sp"
+
+            android:text="0\nEmployee"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/blue"
+
+            android:layout_width="@dimen/btnUsers_width"
+            android:layout_height="@dimen/btnUsers_height" />
+
+        <EditText
+            android:id="@+id/txtSearch"
+            app:layout_constraintTop_toBottomOf="@+id/btnEmployeeUser"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="17sp"
+            android:textColor="@color/grey"
+            android:background="@drawable/custom_find_box"
+            android:drawableEnd="@drawable/ic_find"
+            android:paddingHorizontal="10dp"
+            android:text=""
+            />
+
+        <!-- RecyclerView to show the list of users -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewUsers"
+            app:layout_constraintTop_toBottomOf="@id/txtSearch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

@@ -89,6 +89,7 @@
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="match_parent"
+            android:backgroundTint="@color/blue"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:text="Login"
