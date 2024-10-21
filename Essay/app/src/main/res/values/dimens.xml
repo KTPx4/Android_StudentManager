@@ -1,4 +1,6 @@
 <resources>
     <dimen name="bottom_nav_icon_size">24dp</dimen> <!-- Kích thước biểu tượng -->
     <dimen name="bottom_nav_text_size">14sp</dimen> <!-- Kích thước văn bản -->
+    <dimen name="btnUsers_height">80dp</dimen> <!-- Khoảng cách văn bản -->
+    <dimen name="btnUsers_width">90dp</dimen> <!-- Khoảng cách văn bản -->
 </resources>
