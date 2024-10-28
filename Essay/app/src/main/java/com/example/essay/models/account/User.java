@@ -1,4 +1,4 @@
-package com.example.essay.account;
+package com.example.essay.models.account;
 
 public class User {
     private String name;
