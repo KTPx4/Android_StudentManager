@@ -1,12 +1,16 @@
 package com.example.essay;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +32,9 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     Button btnAdd;
 
+
+    private ActivityResultLauncher<Intent> userInfoLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,24 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         btnAdd.setOnClickListener( v -> {
             AddButton(v);
         });
+
+        // Initialize the user info launcher
+        userInfoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Handle the result for UserInfo activity
+
+                        String rs = result.getData().getStringExtra("success");
+
+                        if(rs != null && rs.equals("ok"))
+                        {
+                            Log.d("HomeActivity", "it run: ");
+                            callUserFragment(); // reload User Fragment
+                        }
+                    }
+                }
+        );
     }
 
     private void AddButton(View view)
@@ -65,8 +90,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
                     Intent intent = new Intent(this, UserInfo.class);
                     intent.putExtra("type", "create");
-                    startActivity(intent);
-
+                    userInfoLauncher.launch(intent);
                 }
                 else if (which == 1)
                 {
@@ -88,6 +112,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
 
     }
+
+
     private void getFromIntent()
     {
         Intent intent = getIntent();
@@ -101,10 +127,33 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             this.finish();
         }
     }
+
     UserFragment userFragment;
     StudentFragment studentFragment;
     SettingFragment settingFragment;
 
+    private void callUserFragment()
+    {
+        action = "users";
+
+        toolbar.setTitle("User Management");
+
+        if(userFragment != null)
+        {
+            userFragment.initUser_v2("", "");
+        }
+        else{
+            userFragment =  UserFragment.newInstance(UserName, Role);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.flFragment, userFragment)
+                    .commit();
+
+        }
+
+
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int idPerson  =R.id.users;
@@ -117,18 +166,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         if(item.getItemId() == idPerson)
         {
-            action = "users";
-
-            toolbar.setTitle("User Management");
-
-            userFragment =  UserFragment.newInstance(UserName, Role);
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, userFragment)
-                    .commit();
+            callUserFragment();
         }
-        else if(item.getItemId() == idStudent) {
+        else if(item.getItemId() == idStudent)
+        {
             action = "students";
 
             toolbar.setTitle("Student Management");

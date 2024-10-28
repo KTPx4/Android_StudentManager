@@ -138,73 +138,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
-    public void initUser(String searchName) {
 
-        // Khởi tạo RecyclerView
-
-
-        // Khởi tạo danh sách người dùng
-        userList = new ArrayList<>();
-        AtomicInteger countManager = new AtomicInteger();
-        AtomicInteger countEmployee = new AtomicInteger();
-
-        // Lấy instance của Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference accountsRef = db.collection(COLECTION_NAME);
-
-        // Nếu biến searchName khác null và không rỗng, thực hiện tìm kiếm với điều kiện
-        if (searchName != null && !searchName.isEmpty()) {
-            accountsRef
-                    .whereGreaterThanOrEqualTo("name", searchName)
-                    .whereLessThanOrEqualTo("name", searchName + '\uf8ff') // '\uf8ff' là ký tự unicode cuối cùng để bao trùm tất cả kết quả khớp
-                    .get()
-                    .addOnCompleteListener(task -> handleQueryResult(task, countManager, countEmployee));
-        }
-        else
-        {
-            // Truy vấn tất cả nếu không có tên được cung cấp
-            accountsRef
-                    .get()
-                    .addOnCompleteListener(task -> handleQueryResult(task, countManager, countEmployee));
-        }
-
-        // Thiết lập adapter cho RecyclerView
-        userAdapter = new UserAdapter(userList, Role);
-        recyclerViewUsers.setAdapter(userAdapter);
-    }
-
-    // Hàm xử lý kết quả truy vấn
-    private void handleQueryResult(Task<QuerySnapshot> task, AtomicInteger countManager, AtomicInteger countEmployee) {
-        if (task.isSuccessful()) {
-            QuerySnapshot querySnapshot = task.getResult();
-            for (QueryDocumentSnapshot document : querySnapshot) {
-                // Lấy dữ liệu từng trường
-                String name = document.getString("name");
-                String user = document.getString("user");
-                String phone = document.getString("phone");
-                String role = document.getString("role");
-                User newUser = new User(name, user, phone, role);
-
-                if (role != null) {
-                    if (role.toLowerCase().equals("manager")) countManager.getAndIncrement();
-                    else if (role.toLowerCase().equals("employee")) countEmployee.getAndIncrement();
-                }
-
-                // Thêm vào danh sách người dùng
-                userList.add(newUser);
-            }
-
-            // Cập nhật adapter
-            userAdapter.notifyDataSetChanged();
-
-            // Cập nhật giá trị các nút sau khi dữ liệu đã được tải về
-            btnAllUser.setText(userList.size() + "\nAll");
-            btnManagerUser.setText(countManager.get() + "\nManager");
-            btnEmployeeUser.setText(countEmployee.get() + "\nEmployee");
-        } else {
-            //Log.d("FirestoreError", "Error getting documents: ", task.getException());
-        }
-    }
 
     public void initUser_v2(String searchName, String RoleSearch) {
 
@@ -239,10 +173,14 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             if(role.equalsIgnoreCase("manager")) countManager++;
                             else if(role.equalsIgnoreCase("employee")) countEmployee++;
                             // Kiểm tra xem tên có chứa chuỗi tìm kiếm hay không
-                            if (name != null && name.toLowerCase().contains(searchName.toLowerCase()) && role.toLowerCase().contains(RoleSearch.toLowerCase()) ) {
+                            if (name != null &&
+                                    name.toLowerCase().contains(searchName.toLowerCase()) &&
+                                    role.toLowerCase().contains(RoleSearch.toLowerCase()) &&
+                                    !role.toLowerCase().equals("admin")
+                            )
+                            {
                                 User newUser = new User(name, user, phone, role);
                                 userList.add(newUser);
-
 
                             }
                         }
@@ -264,7 +202,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         userAdapter = new UserAdapter(userList, Role);
         recyclerViewUsers.setAdapter(userAdapter);
     }
-
 
     private void initAdmin(View view) {
         if(!isAdmin) return;

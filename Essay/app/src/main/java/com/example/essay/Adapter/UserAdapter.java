@@ -38,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         holder.nameTextView.setText(user.getName());
-        holder.txtRole.setText(user.getRole());
+        holder.txtRole.setText(user.getRole() + " - " + user.getUser());
     }
 
     @Override
