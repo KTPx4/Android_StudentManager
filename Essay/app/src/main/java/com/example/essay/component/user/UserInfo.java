@@ -16,9 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.essay.R;
+import com.example.essay.services.AccountService;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Calendar;
 
@@ -97,7 +100,35 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         {
             if(isCanSave())
             {
+                String user = txtUser.getText().toString();
+                String pass = user;
+                String name = txtName.getText().toString();
+                String phone = txtPhone.getText().toString();
+                String birth = txtBirth.getText().toString();
+                String role = txtRole.getText().toString();
 
+                AccountService userService = new AccountService();
+                userService.createUser(user, pass, name, phone, birth, role, new AccountService.UserCreationCallback(){
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // Show success message
+                  //      Log.d("UserService", "User created with ID: " + documentReference.getId());
+                        Toast.makeText(getApplicationContext(),
+                                "Create user success", Toast.LENGTH_SHORT).show();
+
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("success", "ok"); // Thêm dữ liệu cần trả về
+                        setResult(RESULT_OK, resultIntent); // Đặt mã kết quả và Intent
+                        finish(); // Kết thúc Activity B
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Show error message
+                   //     Log.e("UserService", "Error creating user", e);
+                        Toast.makeText(getApplicationContext(),
+                                        e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
         else if(id == R.id.bnt_info_editName)

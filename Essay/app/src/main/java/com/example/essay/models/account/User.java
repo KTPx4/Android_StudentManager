@@ -1,17 +1,26 @@
 package com.example.essay.models.account;
 
 public class User {
+    private String id;
     private String name;
-    private String email;
+    private String user;
     private String phone;
     private String role;
 
     // Constructor
     public User(String name, String email, String phone, String role) {
         this.name = name;
-        this.email = email;
+        this.user = email;
         this.phone = phone;
         this.role = role;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     // Getter and Setter methods
@@ -23,12 +32,12 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUser() {
+        return user;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getPhone() {

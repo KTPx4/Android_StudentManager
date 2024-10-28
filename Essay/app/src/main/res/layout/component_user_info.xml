@@ -107,6 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_info_birthDay"
         android:layout_marginTop="25dp"
         android:textSize="22dp"
+        android:inputType="none"
         android:focusableInTouchMode="false"
         android:paddingHorizontal="10dp"
         android:drawablePadding="10dp"
