@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.essay.Adapter.UserAdapter;
-import com.example.essay.account.User;
+import com.example.essay.models.account.User;
 
 import java.util.ArrayList;
 import java.util.List;

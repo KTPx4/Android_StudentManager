@@ -1,4 +1,4 @@
-package com.example.essay.account;
+package com.example.essay.models.account;
 
 import android.util.Log;
 import com.google.firebase.firestore.FirebaseFirestore;

@@ -1,5 +1,6 @@
 package com.example.essay;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.essay.component.user.UserInfo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnItemSelectedListener
@@ -53,7 +55,28 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         int id = view.getId();
         if(action.equals("users"))
         {
+            // Tạo AlertDialog với hai lựa chọn dọc
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Create User");
 
+            // Set layout của AlertDialog để tạo các nút vertical
+            builder.setItems(new CharSequence[]{"Full Create", "Fast Create"}, (dialog, which) -> {
+                if (which == 0) {
+
+                    Intent intent = new Intent(this, UserInfo.class);
+                    intent.putExtra("type", "create");
+                    startActivity(intent);
+
+                }
+                else if (which == 1)
+                {
+
+                }
+
+            });
+
+            // Hiển thị AlertDialog
+            builder.create().show();
         }
         else if(action.equals("students"))
         {

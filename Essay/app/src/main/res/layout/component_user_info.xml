@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="25dp"
+    android:background="@color/default_background">
+
+    <ImageView
+        android:id="@+id/avt_info_user"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="40dp"
+
+        android:src="@drawable/ic_person_foreground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_info_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:text=""
+        android:hint="Name"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avt_info_user" />
+
+    <ImageButton
+        android:id="@+id/bnt_info_editName"
+        android:tooltipText="Edit"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@id/txt_info_name"
+        app:layout_constraintStart_toEndOf="@+id/txt_info_name"
+        app:layout_constraintTop_toTopOf="@+id/txt_info_name" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <EditText
+        android:inputType="text"
+        android:maxLines="1"
+        android:id="@+id/txt_info_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="User"
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="25dp"
+        android:drawablePadding="10dp"
+        android:textSize="22dp"
+        android:drawableLeft="@drawable/ic_person"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <EditText
+        android:inputType="phone"
+        android:maxLines="1"
+        android:id="@+id/txt_info_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone"
+        android:paddingHorizontal="10dp"
+        android:drawablePadding="10dp"
+        android:textSize="22dp"
+
+        android:drawableLeft="@drawable/ic_phone"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_user" />
+
+    <EditText
+        android:id="@+id/txt_info_birthDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        android:layout_marginTop="25dp"
+        android:paddingHorizontal="10dp"
+        android:textSize="22dp"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_calender"
+        android:hint="Birth day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:focusable="false"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_phone" />
+
+    <AutoCompleteTextView
+        android:id="@+id/txt_info_role"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_birthDay"
+        android:layout_marginTop="25dp"
+        android:textSize="22dp"
+        android:focusableInTouchMode="false"
+        android:paddingHorizontal="10dp"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_person_role"
+        android:hint="Role" />
+
+    <TextView
+        android:id="@+id/txt_info_err"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:text=""
+        android:layout_marginStart="7dp"
+        android:textSize="18sp"
+        android:textColor="@color/red"
+
+        app:layout_constraintStart_toStartOf="@+id/txt_info_role"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_role" />
+
+    <Button
+        android:id="@+id/btn_info_close"
+        android:layout_width="150dp"
+        android:text="Close"
+        android:fontFamily="sans-serif-medium"
+        android:layout_height="55dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_info_save"
+        />
+
+    <Button
+        android:id="@+id/btn_info_save"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:backgroundTint="@color/blue_2"
+        android:textColor="@color/white"
+        android:text="Save"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_info_close"
+        app:layout_constraintTop_toBottomOf="@+id/guideline2"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
