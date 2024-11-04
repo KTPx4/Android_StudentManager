@@ -19,26 +19,28 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.essay.R;
 import com.example.essay.services.AccountService;
+import com.example.essay.services.ServiceCallback;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Calendar;
 
 public class UserInfo extends AppCompatActivity implements View.OnClickListener {
-    private static boolean isEdit = false;
+    private static String typeStart = "create";
     AutoCompleteTextView txtRole;
     Button btnSave, btnClose;
     ImageButton btnEditName;
     TextView txtErr, txtName, txtUser, txtPhone, txtBirth;
+    ImageButton btnAvt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.component_user_info);
-
-
+        btnAvt = findViewById(R.id.avt_info_user);
         txtRole = findViewById(R.id.txt_info_role);
         btnSave = findViewById(R.id.btn_info_save);
         btnClose = findViewById(R.id.btn_info_close);
@@ -49,24 +51,64 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         txtPhone = findViewById(R.id.txt_info_phone);
         txtBirth = findViewById(R.id.txt_info_birthDay);
 
-        Intent itent = getIntent();
-        String type = itent.getStringExtra("type");
-        if(type != null && type.equals("edit"))
-        {
-            isEdit = true;
-            intiEdit(itent);
-        }
-
+        btnAvt.setOnClickListener(this);
         txtRole.setOnClickListener(this);
         txtBirth.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnEditName.setOnClickListener(this);
 
-    }
-    private void intiEdit(Intent itent)
-    {
+        Intent itent = getIntent();
+        String type = itent.getStringExtra("type");
 
+        if(type != null && type.equals("edit"))
+        {
+            typeStart = "edit";
+        }
+        else if(type != null && type.equals("view"))
+        {
+            typeStart = "view";
+        }
+        else typeStart = "create";
+
+        intiStart(itent);
+    }
+    private void intiStart(Intent itent)
+    {
+        if(typeStart.equals("create")) return;
+
+        txtErr.setText(""); ;
+        txtRole.setText(itent.getStringExtra("role"));
+        txtName.setText(itent.getStringExtra("name"))  ;
+        txtUser.setText(itent.getStringExtra("user")) ;
+        txtPhone.setText(itent.getStringExtra("phone"));
+        txtBirth.setText(itent.getStringExtra("birth"));
+
+        Glide.with(getApplicationContext())
+                .load(itent.getStringExtra("linkAvt")) // Đường dẫn tới ảnh
+                .error(R.drawable.ic_person_foreground)
+                .into(btnAvt); // ImageButton bạn muốn thiết lập ảnh
+
+        switch (typeStart)
+        {
+            case "edit":
+                txtUser.setEnabled(false);
+                break;
+
+            case "view":
+                btnEditName.setVisibility(View.INVISIBLE);
+                btnSave.setVisibility(View.INVISIBLE);
+                txtRole.setEnabled(false);
+                txtErr.setText(""); ;
+                txtName.setEnabled(false);
+                txtUser.setEnabled(false);
+                txtPhone.setEnabled(false);
+                txtBirth.setEnabled(false);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private boolean isCanSave()
@@ -96,7 +138,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         {
             finish();
         }
-        else if(id == R.id.btn_info_save)
+        else if(id == R.id.btn_info_save && typeStart.equals("create"))
         {
             if(isCanSave())
             {
@@ -108,7 +150,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 String role = txtRole.getText().toString();
 
                 AccountService userService = new AccountService();
-                userService.createUser(user, pass, name, phone, birth, role, new AccountService.UserCreationCallback(){
+                userService.createUser(user, pass, name, phone, birth, role, new ServiceCallback() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Show success message
@@ -121,12 +163,70 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                         setResult(RESULT_OK, resultIntent); // Đặt mã kết quả và Intent
                         finish(); // Kết thúc Activity B
                     }
+
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Show error message
                    //     Log.e("UserService", "Error creating user", e);
                         Toast.makeText(getApplicationContext(),
                                         e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResult(boolean exists) {
+
+                    }
+                });
+            }
+        }
+        else if(id == R.id.btn_info_save && typeStart.equals("edit"))
+        {
+            if(isCanSave())
+            {
+                String user = txtUser.getText().toString();
+
+                String pass = user;
+                String name = txtName.getText().toString();
+                String phone = txtPhone.getText().toString();
+                String birth = txtBirth.getText().toString();
+                String role = txtRole.getText().toString();
+
+                AccountService userService = new AccountService();
+                userService.updateUser(user, pass, name, phone, birth, role, new ServiceCallback() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // Show success message
+                        //      Log.d("UserService", "User created with ID: " + documentReference.getId());
+                        Toast.makeText(getApplicationContext(),
+                                "Update user success", Toast.LENGTH_SHORT).show();
+
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("success", "ok"); // Thêm dữ liệu cần trả về
+                        setResult(RESULT_OK, resultIntent); // Đặt mã kết quả và Intent
+                        finish(); // Kết thúc Activity B
+                    }
+
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Show error message
+                        //     Log.e("UserService", "Error creating user", e);
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResult(boolean exists) {
+
                     }
                 });
             }

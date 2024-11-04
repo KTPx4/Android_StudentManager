@@ -1,5 +1,7 @@
 package com.example.essay;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,18 +19,20 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.essay.Adapter.UserAdapter;
+import com.example.essay.component.user.HistoryInfo;
+import com.example.essay.component.user.UserInfo;
 import com.example.essay.models.account.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link UserFragment#newInstance} factory method to
@@ -55,20 +59,14 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     private Handler searchHandler = new Handler();
     private Runnable searchRunnable;
+    private ActivityResultLauncher<Intent> userInfoLauncher;
+
+
     public UserFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UserFragment newInstance(String param1, String param2) {
+     public static UserFragment newInstance(String param1, String param2) {
         UserFragment fragment = new UserFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -103,6 +101,24 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         btnEmployeeUser.setOnClickListener(this);
         recyclerViewUsers = view.findViewById(R.id.recyclerViewUsers);
         recyclerViewUsers.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Initialize the user info launcher
+        userInfoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Handle the result for UserInfo activity
+
+                        String rs = result.getData().getStringExtra("success");
+
+                        if(rs != null && rs.equals("ok"))
+                        {
+                            Log.d("HomeActivity", "it run: ");
+                            // reload User Fragment
+                            initUser_v2("", "");
+                        }
+                    }
+                }
+        );
         searchName();
         initAdmin(view);
         initUser_v2("", "");
@@ -169,6 +185,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             String user = document.getString("user");
                             String phone = document.getString("phone");
                             String role = document.getString("role");
+                            String linkAvt = document.getString("linkAvt");
+                            String birth = document.getString("birthDay");
+
                             countALl ++;
                             if(role.equalsIgnoreCase("manager")) countManager++;
                             else if(role.equalsIgnoreCase("employee")) countEmployee++;
@@ -179,7 +198,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                                     !role.toLowerCase().equals("admin")
                             )
                             {
-                                User newUser = new User(name, user, phone, role);
+                                User newUser = new User(name, user, phone, role, linkAvt,birth);
                                 userList.add(newUser);
 
                             }
@@ -199,10 +218,37 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 });
 
         // Thiết lập adapter cho RecyclerView
-        userAdapter = new UserAdapter(userList, Role);
+        userAdapter = new UserAdapter(userList, Role, new OnUserClickListener() {
+            @Override
+            public void onUserClick(User User, String type) {
+                Intent intent = null;
+                if(type.equals("history"))
+                {
+                    intent = new Intent(getContext(), HistoryInfo.class);
+                }
+                else{
+                    intent = new Intent(getContext(), UserInfo.class);
+                }
+
+                intent.putExtra("type", type);
+                intent.putExtra("role", User.getRole());
+                intent.putExtra("name", User.getName());
+                intent.putExtra("user", User.getUser());
+                intent.putExtra("phone", User.getPhone());
+                intent.putExtra("birth", User.getBirth());
+
+                userInfoLauncher.launch(intent);
+
+            }
+        });
+        Runnable refreshListener = this::refresh;
+
+        userAdapter.setRefreshListener( refreshListener);
         recyclerViewUsers.setAdapter(userAdapter);
     }
-
+    public void refresh() {
+        initUser_v2("", "");
+    }
     private void initAdmin(View view) {
         if(!isAdmin) return;
 
@@ -227,5 +273,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Log.d("UserFragment", "onClick: btnEmployeeUser");
 
         }
+        else{
+            Log.d("UserFragment", "onClick: "+ v.getContext().toString());
+
+        }
+    }
+
+    public interface OnUserClickListener {
+        void onUserClick(User user, String type); // Phương thức được gọi khi click vào user
     }
 }

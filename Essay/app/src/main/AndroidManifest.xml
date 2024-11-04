@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Essay"
         tools:targetApi="31">
         <activity
+            android:name=".component.user.HistoryInfo"
+            android:exported="false" />
+        <activity
             android:name=".component.user.UserInfo"
             android:exported="false" />
         <activity

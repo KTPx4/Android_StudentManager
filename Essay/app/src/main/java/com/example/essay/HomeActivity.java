@@ -7,7 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,7 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.essay.component.user.UserInfo;
+import com.example.essay.services.AccountService;
+import com.example.essay.services.ServiceCallback;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnItemSelectedListener
 {
@@ -68,7 +76,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                         if(rs != null && rs.equals("ok"))
                         {
                             Log.d("HomeActivity", "it run: ");
-                            callUserFragment(); // reload User Fragment
+                             // reload User Fragment
+                            reloadUserFragment();
                         }
                     }
                 }
@@ -87,16 +96,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             // Set layout của AlertDialog để tạo các nút vertical
             builder.setItems(new CharSequence[]{"Full Create", "Fast Create"}, (dialog, which) -> {
                 if (which == 0) {
-
                     Intent intent = new Intent(this, UserInfo.class);
                     intent.putExtra("type", "create");
                     userInfoLauncher.launch(intent);
                 }
-                else if (which == 1)
-                {
-
+                else if (which == 1) {
+                    fastAddUserDialog();
                 }
-
             });
 
             // Hiển thị AlertDialog
@@ -113,7 +119,85 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     }
 
+    private void fastAddUserDialog()
+    {
 
+        // Tạo AlertDialog mới cho Fast Create với hai trường nhập User và Name
+        AlertDialog.Builder fastCreateDialog = new AlertDialog.Builder(this);
+        fastCreateDialog.setTitle("Fast Create");
+
+        // Tạo layout chứa các EditText và Spinner
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+
+        // Tạo EditText cho User
+        EditText userInput = new EditText(this);
+        userInput.setHint("User");
+        layout.addView(userInput);
+
+        // Tạo EditText cho Name
+        EditText nameInput = new EditText(this);
+        nameInput.setHint("Name");
+        layout.addView(nameInput);
+
+        // Tạo Spinner cho lựa chọn Role
+        Spinner roleSpinner = new Spinner(this);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{"Manager", "Employee"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roleSpinner.setAdapter(adapter);
+        layout.addView(roleSpinner);
+
+
+        fastCreateDialog.setView(layout);
+
+        // Nút Xác nhận
+        fastCreateDialog.setPositiveButton("Confirm", (dialogInterface, i) -> {
+            String user = userInput.getText().toString();
+            String name = nameInput.getText().toString();
+            String role = roleSpinner.getSelectedItem().toString();
+
+            if (user.isEmpty() || name.isEmpty() || role.isEmpty())
+            {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            AccountService accountService = new AccountService();
+            accountService.fastCreate(user, name, role,new ServiceCallback () {
+
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(HomeActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
+                    // Reload User Fragment
+                    reloadUserFragment();
+                }
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(),
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onResult(boolean exists) {
+
+                }
+            });
+        });
+
+        // Nút Hủy
+        fastCreateDialog.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        });
+
+        // Hiển thị AlertDialog Fast Create
+        fastCreateDialog.create().show();
+    }
+    // load data auth account
     private void getFromIntent()
     {
         Intent intent = getIntent();
@@ -132,28 +216,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     StudentFragment studentFragment;
     SettingFragment settingFragment;
 
-    private void callUserFragment()
+    private void reloadUserFragment()
     {
-        action = "users";
-
-        toolbar.setTitle("User Management");
-
-        if(userFragment != null)
-        {
+        if(userFragment != null) {
             userFragment.initUser_v2("", "");
         }
-        else{
-            userFragment =  UserFragment.newInstance(UserName, Role);
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, userFragment)
-                    .commit();
-
-        }
-
-
     }
+
+    // click on bottom navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int idPerson  =R.id.users;
@@ -166,7 +236,15 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         if(item.getItemId() == idPerson)
         {
-            callUserFragment();
+            action = "users";
+
+            toolbar.setTitle("User Management");
+            userFragment =  UserFragment.newInstance(UserName, Role);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.flFragment, userFragment)
+                    .commit();
         }
         else if(item.getItemId() == idStudent)
         {
@@ -179,7 +257,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .replace(R.id.flFragment, studentFragment)
                     .commit();
         }
-        else if(item.getItemId() == idSetting) {
+        else if(item.getItemId() == idSetting)
+        {
 
             toolbar.setTitle("Setting");
             btnAdd.setVisibility(View.INVISIBLE);

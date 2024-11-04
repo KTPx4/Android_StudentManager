@@ -2,40 +2,177 @@ package com.example.essay.services;
 
 import androidx.annotation.NonNull;
 
+import com.example.essay.models.account.AccountModel;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccountService {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, UserCreationCallback callback) {
-        checkUserExists(user, exists -> {
-            if (exists) {
-                // User already exists, return failure
-                callback.onFailure(new Exception("User already exists"));
-            }
-            else
-            {
-                // User does not exist, proceed to create
-                UserModel newUser = new UserModel(user, pass, name, phone, birthDay, role);
+    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, ServiceCallback callback) {
+        checkUserExists(user, new ServiceCallback() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
 
-                db.collection("accounts")
-                        .add(newUser)
-                        .addOnSuccessListener(documentReference -> {
-                            // Success
-                            callback.onSuccess(documentReference);
-                        })
-                        .addOnFailureListener(e -> {
-                            // Failure
-                            callback.onFailure(e);
-                        });
+            }
+
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+
+            @Override
+            public void onResult(boolean exists) {
+                if (exists) {
+                    // User already exists, return failure
+                    callback.onFailure(new Exception("User already exists"));
+                }
+                else
+                {
+                    // User does not exist, proceed to create
+                    AccountModel newUser = new AccountModel(user, pass, name, phone, birthDay, role);
+
+                    db.collection("accounts")
+                            .add(newUser)
+                            .addOnSuccessListener(documentReference -> {
+                                // Success
+                                callback.onSuccess(documentReference);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Failure
+                                callback.onFailure(e);
+                            });
+                }
+            }
+        });
+    }
+    public void fastCreate(String user, String name, String role, ServiceCallback callback) {
+        checkUserExists(user, new ServiceCallback() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+
+            @Override
+            public void onResult(boolean exists) {
+                if (exists) {
+                    // User already exists, return failure
+                    callback.onFailure(new Exception("User already exists"));
+                }
+                else
+                {
+                    // User does not exist, proceed to create
+                    AccountModel newUser = new AccountModel(user, user, name, "", "1/1/2003", role);
+
+                    db.collection("accounts")
+                            .add(newUser)
+                            .addOnSuccessListener(documentReference -> {
+                                // Success
+                                callback.onSuccess(documentReference);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Failure
+                                callback.onFailure(e);
+                            });
+                }
             }
         });
     }
 
-    private void checkUserExists(String username, UserExistsCallback callback) {
+    public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, ServiceCallback callback) {
+        // Tìm tài liệu của người dùng bằng user (username)
+        db.collection("accounts")
+                .whereEqualTo("user", user) // Tìm kiếm theo username
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Người dùng tồn tại, cập nhật thông tin
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0); // Giả sử chỉ có 1 tài liệu
+                        DocumentReference docRef = document.getReference();
+
+                        // Tạo bản cập nhật dữ liệu
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("pass", newPass);
+                        updates.put("name", newName);
+                        updates.put("phone", newPhone);
+                        updates.put("birthDay", newBirthDay);
+                        updates.put("role", newRole);
+
+                        // Cập nhật tài liệu
+                        docRef.update(updates)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Cập nhật thành công
+                                    callback.onSuccess(docRef);
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Xảy ra lỗi khi cập nhật
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        // Người dùng không tồn tại, trả về lỗi
+                        callback.onFailure(new Exception("User does not exist"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Xảy ra lỗi khi tìm kiếm người dùng
+                    callback.onFailure(e);
+                });
+    }
+
+
+    public void deleteAccount(String user, ServiceCallback callback) {
+        // Truy vấn để tìm tài khoản với tên người dùng đã nhập
+        db.collection("accounts")
+                .whereEqualTo("user", user)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Lấy tài liệu đầu tiên có tên người dùng khớp
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+
+                        // Xóa tài liệu đó khỏi Firestore
+                        document.getReference().delete()
+                                .addOnSuccessListener(documentReference -> {
+                                    // Thành công
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Thất bại
+                                    callback.onFailure(e);
+                                });
+                    } else if (task.isSuccessful() && task.getResult().isEmpty()) {
+                        // Không tìm thấy tài khoản
+                        callback.onFailure(new Exception("User not found"));
+                    } else {
+                        // Lỗi trong quá trình truy vấn
+                        callback.onFailure(task.getException());
+                    }
+                });
+    }
+
+
+    private void checkUserExists(String username, ServiceCallback callback) {
         db.collection("accounts")
                 .whereEqualTo("user", username)
                 .get()
@@ -49,88 +186,6 @@ public class AccountService {
                 });
     }
 
-    public interface UserCreationCallback {
-        void onSuccess(DocumentReference documentReference);
 
-        void onFailure(@NonNull Exception e);
-    }
 
-    public interface UserExistsCallback {
-        void onResult(boolean exists);
-    }
-
-    public static class UserModel {
-        private String user;
-        private String pass;
-        private String name;
-        private String phone;
-        private String birthDay;
-        private String role;
-        private String linkAvt;
-        private String status;
-
-        public UserModel() {
-            // Default constructor required for Firestore
-        }
-
-        public UserModel(String username, String password, String name, String phone, String birthDay, String role) {
-            this.user = username;
-            this.pass = password;
-            this.name = name;
-            this.phone = phone;
-            this.birthDay = birthDay;
-            this.role = role;
-            this.linkAvt = "/";
-            this.status = "normal";
-        }
-
-        // Getters and setters
-        public String getUser() {
-            return user;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
-        }
-
-        public String getPassword() {
-            return pass;
-        }
-
-        public void setPassword(String password) {
-            this.pass = password;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public String getBirthDay() {
-            return birthDay;
-        }
-
-        public void setBirthDay(String birthDay) {
-            this.birthDay = birthDay;
-        }
-
-        public String getRole() {
-            return role;
-        }
-
-        public void setRole(String role) {
-            this.role = role;
-        }
-    }
 }
