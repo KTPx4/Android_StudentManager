@@ -7,12 +7,12 @@
     android:paddingHorizontal="25dp"
     android:background="@color/default_background">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/avt_info_user"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="40dp"
-
+        android:backgroundTint="@color/default_background"
         android:src="@drawable/ic_person_foreground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
