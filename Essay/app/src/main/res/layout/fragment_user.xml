@@ -9,6 +9,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_user_body"
         android:paddingHorizontal="30dp"
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
@@ -84,6 +85,19 @@
             android:paddingHorizontal="10dp"
             android:text=""
             />
+        <!-- ProgressBar -->
+        <ProgressBar
+            android:id="@+id/fragment_user"
+            android:indeterminateTint="@color/blue"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtSearch" />
 
         <!-- RecyclerView to show the list of users -->
         <androidx.recyclerview.widget.RecyclerView

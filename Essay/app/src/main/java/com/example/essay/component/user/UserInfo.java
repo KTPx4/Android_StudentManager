@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -32,7 +33,8 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
     AutoCompleteTextView txtRole;
     Button btnSave, btnClose;
     ImageButton btnEditName;
-    TextView txtErr, txtName, txtUser, txtPhone, txtBirth;
+    TextView txtErr, txtName;
+    EditText  txtUser, txtPhone, txtBirth, txtEmail;
     ImageButton btnAvt;
 
     @Override
@@ -50,6 +52,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         txtUser = findViewById(R.id.txt_info_user);
         txtPhone = findViewById(R.id.txt_info_phone);
         txtBirth = findViewById(R.id.txt_info_birthDay);
+        txtEmail = findViewById(R.id.txt_info_email);
 
         btnAvt.setOnClickListener(this);
         txtRole.setOnClickListener(this);
@@ -69,6 +72,10 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         {
             typeStart = "view";
         }
+        else if(type != null && type.equals("profile"))
+        {
+            typeStart ="profile";
+        }
         else typeStart = "create";
 
         intiStart(itent);
@@ -83,6 +90,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         txtUser.setText(itent.getStringExtra("user")) ;
         txtPhone.setText(itent.getStringExtra("phone"));
         txtBirth.setText(itent.getStringExtra("birth"));
+        txtEmail.setText(itent.getStringExtra("email"));
 
         Glide.with(getApplicationContext())
                 .load(itent.getStringExtra("linkAvt")) // Đường dẫn tới ảnh
@@ -104,7 +112,12 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 txtUser.setEnabled(false);
                 txtPhone.setEnabled(false);
                 txtBirth.setEnabled(false);
+                txtEmail.setEnabled(false);
                 break;
+
+            case "profile":
+                txtUser.setEnabled(false);
+                txtRole.setEnabled(false);
 
             default:
                 break;
@@ -122,6 +135,8 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         else if(txtBirth.getText().toString().isEmpty()) txtErr.setText("Please choise Birth Day");
 
         else if( txtRole.getText().toString().isEmpty()) txtErr.setText("Please choise Role");
+        else if( txtEmail.getText().toString().isEmpty()) txtErr.setText("Please input email");
+        else if(!Patterns.EMAIL_ADDRESS.matcher(txtEmail.getText().toString()).matches())txtErr.setText("Email not invalid");
 
         else return true;
 
@@ -148,9 +163,10 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 String phone = txtPhone.getText().toString();
                 String birth = txtBirth.getText().toString();
                 String role = txtRole.getText().toString();
+                String email = txtEmail.getText().toString();
 
                 AccountService userService = new AccountService();
-                userService.createUser(user, pass, name, phone, birth, role, new ServiceCallback() {
+                userService.createUser(user, pass, name, phone, birth, role, email, new ServiceCallback() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Show success message
@@ -184,7 +200,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 });
             }
         }
-        else if(id == R.id.btn_info_save && typeStart.equals("edit"))
+        else if(id == R.id.btn_info_save && (typeStart.equals("edit") || typeStart.equals("profile")))
         {
             if(isCanSave())
             {
@@ -195,9 +211,10 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 String phone = txtPhone.getText().toString();
                 String birth = txtBirth.getText().toString();
                 String role = txtRole.getText().toString();
+                String email = txtEmail.getText().toString();
 
                 AccountService userService = new AccountService();
-                userService.updateUser(user, pass, name, phone, birth, role, new ServiceCallback() {
+                userService.updateUser(user, pass, name, phone, birth, role, email, new ServiceCallback() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Show success message
@@ -207,6 +224,12 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
 
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("success", "ok"); // Thêm dữ liệu cần trả về
+                        resultIntent.putExtra("name", name);
+                        resultIntent.putExtra("phone", phone);
+                        resultIntent.putExtra("birth", birth);
+                        resultIntent.putExtra("email", email);
+                        resultIntent.putExtra("role", role);
+
                         setResult(RESULT_OK, resultIntent); // Đặt mã kết quả và Intent
                         finish(); // Kết thúc Activity B
                     }
@@ -231,6 +254,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 });
             }
         }
+
         else if(id == R.id.bnt_info_editName)
         {
             // Tạo EditText
