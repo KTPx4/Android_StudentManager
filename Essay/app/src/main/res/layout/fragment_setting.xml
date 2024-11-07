@@ -3,17 +3,249 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_person"
+            android:layout_marginTop="26dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/grey"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
-        android:id="@+id/btn_Logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
-        android:text="Logout"
+        <TextView
+            android:id="@+id/txt_setting_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kieu Thanh Phat"
+            android:layout_marginTop="20dp"
+            android:textSize="23dp"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
         />
+        <!-- ProgressBar -->
+        <ProgressBar
+            android:id="@+id/fragment_setting"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="162dp"
+            tools:layout_editor_absoluteY="189dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_setting_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_setting_role"
+            app:layout_constraintTop_toBottomOf="@+id/txt_setting_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="45dp"
+            android:layout_marginHorizontal="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:paddingHorizontal="10dp"
+                android:gravity="center_vertical">
+
+                <!-- Biểu tượng điện thoại -->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_person_role"
+                    app:tint="@color/blue"
+                    />
+
+                <!-- Số điện thoại -->
+                <TextView
+                    android:id="@+id/txt_setting_role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Manager"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+                android:id="@+id/card_setting_phone"
+                app:layout_constraintTop_toBottomOf="@+id/card_setting_role"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Biểu tượng điện thoại -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_phone"
+                        app:tint="@color/blue"
+                        />
+
+                    <!-- Số điện thoại -->
+                    <TextView
+                        android:id="@+id/txt_setting_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="09 090 909 01"
+                        android:textColor="#757575"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+         <androidx.cardview.widget.CardView
+                android:id="@+id/card_setting_birth"
+                app:layout_constraintTop_toBottomOf="@+id/card_setting_phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Biểu tượng điện thoại -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_calender"
+                        app:tint="@color/blue"
+                        />
+
+                    <!-- Số điện thoại -->
+                    <TextView
+                        android:id="@+id/txt_setting_birth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1/1/2003"
+                        android:textColor="#757575"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_setting_email"
+                app:layout_constraintTop_toBottomOf="@+id/card_setting_birth"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Biểu tượng điện thoại -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_email"
+                        app:tint="@color/blue"
+                        />
+
+                    <!-- Số điện thoại -->
+                    <TextView
+                        android:id="@+id/txt_setting_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="px4@gmail.com"
+                        android:textColor="#757575"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btn_setting_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/card_setting_email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginHorizontal="50dp"
+            android:backgroundTint="@color/blue"
+            android:text="Edit"
+            android:textColor="@color/white"
+
+            />
+        <Button
+            android:id="@+id/btn_setting_change_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/btn_setting_edit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="50dp"
+            android:backgroundTint="@color/blue_2"
+            android:text="Change password"
+            android:textColor="@color/white"
+
+            />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

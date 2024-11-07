@@ -3,6 +3,7 @@ package com.example.essay;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,13 +33,16 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 {
     private static String UserName ="";
     private static String Role = "";
+    private static String Phone ="";
+    private static String Birth ="";
+    private static String Email ="";
     private static String Name ="";
     private Toolbar toolbar;
     private static String action ="users";
 
     BottomNavigationView bottomNavigationView;
 
-    Button btnAdd;
+    Button btnAdd, btnLogout;
 
 
     private ActivityResultLauncher<Intent> userInfoLauncher;
@@ -52,6 +56,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         getFromIntent();
         toolbar = findViewById(R.id.toolbar);
         btnAdd = findViewById(R.id.btnAdd);
+        btnLogout = findViewById(R.id.btnLogout);
 
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
@@ -61,7 +66,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         bottomNavigationView.setSelectedItemId(R.id.users);
         btnAdd.setOnClickListener( v -> {
-            AddButton(v);
+            HandleAppBarButton(v);
+        });
+        btnLogout.setOnClickListener(v -> {
+            HandleAppBarButton(v);
         });
 
         // Initialize the user info launcher
@@ -84,7 +92,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         );
     }
 
-    private void AddButton(View view)
+    private void HandleAppBarButton(View view)
     {
         int id = view.getId();
         if(action.equals("users"))
@@ -112,9 +120,28 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         {
 
         }
-        else
+        else // setting - logout
         {
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Logout");
+            builder.setMessage("Are you sure you want to logout?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                SharedPreferences sharedPreferences = getSharedPreferences("appPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear(); // Xóa tất cả dữ liệu trong SharedPreferences
+                editor.apply(); // Hoặc editor.commit() nếu bạn muốn thực hiện đồng bộ
+
+                // Điều hướng về màn hình đăng nhập
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Xóa ngăn xếp hoạt động
+                startActivity(intent);
+                finish(); // Kết thúc Activity hiện tại
+            });
+            builder.setNegativeButton("No", (dialog, which) -> {
+               dialog.dismiss();
+            });
+            builder.create().show();
         }
 
     }
@@ -204,6 +231,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         UserName = intent.getStringExtra("user");
         Role = intent.getStringExtra("role");
         Name = intent.getStringExtra("name");
+        Phone = intent.getStringExtra("phone");
+        Birth = intent.getStringExtra("birth");
+        Email = intent.getStringExtra("email");
+
         if(UserName.isEmpty() || Role.isEmpty())
         {
             Intent intent1 = new Intent(this, LoginActivity.class);
@@ -233,6 +264,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         if(Role.toLowerCase().equals("admin")) btnAdd.setVisibility(View.VISIBLE);
         else btnAdd.setVisibility(View.INVISIBLE);
 
+        btnLogout.setVisibility(View.INVISIBLE);
 
         if(item.getItemId() == idPerson)
         {
@@ -249,7 +281,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         else if(item.getItemId() == idStudent)
         {
             action = "students";
-
             toolbar.setTitle("Student Management");
             studentFragment = StudentFragment.newInstance(UserName, Role);
             getSupportFragmentManager()
@@ -259,10 +290,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
         else if(item.getItemId() == idSetting)
         {
-
+            action = "logout";
             toolbar.setTitle("Setting");
             btnAdd.setVisibility(View.INVISIBLE);
-            settingFragment = SettingFragment.newInstance(UserName, Role);
+            btnLogout.setVisibility(View.VISIBLE);
+            settingFragment = SettingFragment.newInstance(UserName, Role, Name, Phone, Birth, Email);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.flFragment, settingFragment)

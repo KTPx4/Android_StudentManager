@@ -15,7 +15,7 @@ public class AccountService {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, ServiceCallback callback) {
+    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, String email, ServiceCallback callback) {
         checkUserExists(user, new ServiceCallback() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -41,7 +41,7 @@ public class AccountService {
                 else
                 {
                     // User does not exist, proceed to create
-                    AccountModel newUser = new AccountModel(user, pass, name, phone, birthDay, role);
+                    AccountModel newUser = new AccountModel(user, pass, name, phone, birthDay, role, email);
 
                     db.collection("accounts")
                             .add(newUser)
@@ -83,7 +83,7 @@ public class AccountService {
                 else
                 {
                     // User does not exist, proceed to create
-                    AccountModel newUser = new AccountModel(user, user, name, "", "1/1/2003", role);
+                    AccountModel newUser = new AccountModel(user, user, name, "", "1/1/2003", role, "");
 
                     db.collection("accounts")
                             .add(newUser)
@@ -100,7 +100,7 @@ public class AccountService {
         });
     }
 
-    public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, ServiceCallback callback) {
+    public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, String email, ServiceCallback callback) {
         // Tìm tài liệu của người dùng bằng user (username)
         db.collection("accounts")
                 .whereEqualTo("user", user) // Tìm kiếm theo username
@@ -118,7 +118,7 @@ public class AccountService {
                         updates.put("phone", newPhone);
                         updates.put("birthDay", newBirthDay);
                         updates.put("role", newRole);
-
+                        updates.put("email", email);
                         // Cập nhật tài liệu
                         docRef.update(updates)
                                 .addOnSuccessListener(aVoid -> {

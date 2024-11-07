@@ -8,15 +8,25 @@ public class User {
     private String role;
     private String linkAvt;
     private String birth;
+    private String email;
 
     // Constructor
-    public User(String name, String email, String phone, String role, String linkAvt, String birth) {
+    public User(String name, String user, String phone, String role, String linkAvt, String birth, String email) {
         this.name = name;
-        this.user = email;
+        this.user = user;
         this.phone = phone;
         this.role = role;
         this.linkAvt = linkAvt;
         this.birth = birth;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getBirth() {

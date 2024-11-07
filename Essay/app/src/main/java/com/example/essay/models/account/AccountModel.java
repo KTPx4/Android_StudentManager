@@ -9,9 +9,10 @@ public class AccountModel {
     private String role;
     private String linkAvt;
     private String status;
+    private String email;
 
     public AccountModel(){}
-    public  AccountModel(String username, String password, String name, String phone, String birthDay, String role)
+    public  AccountModel(String username, String password, String name, String phone, String birthDay, String role, String email)
     {
         this.user = username;
         this.pass = password;
@@ -21,6 +22,15 @@ public class AccountModel {
         this.role = role;
         this.linkAvt = "/";
         this.status = "normal";
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUser() {

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.essay.Adapter.UserAdapter;
 import com.example.essay.component.user.HistoryInfo;
@@ -56,7 +57,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private Button btnManagerUser;
     private Button btnEmployeeUser;
     private EditText edtSearch;
-
+    private ProgressBar progressBar;
     private Handler searchHandler = new Handler();
     private Runnable searchRunnable;
     private ActivityResultLauncher<Intent> userInfoLauncher;
@@ -96,6 +97,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         btnManagerUser = view.findViewById(R.id.btnManagerUser);
         btnEmployeeUser = view.findViewById(R.id.btnEmployeeUser);
         edtSearch = view.findViewById(R.id.txtSearch);
+        progressBar = view.findViewById(R.id.fragment_user);
+
         btnAllUser.setOnClickListener(this);
         btnManagerUser.setOnClickListener(this);
         btnEmployeeUser.setOnClickListener(this);
@@ -157,8 +160,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
 
     public void initUser_v2(String searchName, String RoleSearch) {
+        // Hiển thị ProgressBar
+        progressBar.setVisibility(View.VISIBLE);
 
-        // Khởi tạo RecyclerView
 
 
         // Khởi tạo danh sách người dùng
@@ -173,6 +177,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         accountsRef
                 .get()
                 .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         QuerySnapshot querySnapshot = task.getResult();
                         userList.clear();
@@ -187,6 +192,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             String role = document.getString("role");
                             String linkAvt = document.getString("linkAvt");
                             String birth = document.getString("birthDay");
+                            String email = document.getString("email");
 
                             countALl ++;
                             if(role.equalsIgnoreCase("manager")) countManager++;
@@ -198,7 +204,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                                     !role.toLowerCase().equals("admin")
                             )
                             {
-                                User newUser = new User(name, user, phone, role, linkAvt,birth);
+                                User newUser = new User(name, user, phone, role, linkAvt,birth, email);
                                 userList.add(newUser);
 
                             }
@@ -236,6 +242,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 intent.putExtra("user", User.getUser());
                 intent.putExtra("phone", User.getPhone());
                 intent.putExtra("birth", User.getBirth());
+                intent.putExtra("email", User.getEmail());
 
                 userInfoLauncher.launch(intent);
 

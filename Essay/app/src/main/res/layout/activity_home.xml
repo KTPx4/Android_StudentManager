@@ -48,6 +48,22 @@
               android:textSize="27dp"
               />
 
+          <Button
+              android:visibility="invisible"
+              android:id="@+id/btnLogout"
+              android:drawableStart="@drawable/ic_logout"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintBottom_toBottomOf="parent"
+              android:layout_marginEnd="10dp"
+              android:layout_width="50dp"
+              android:layout_height="50dp"
+              style="@style/Widget.AppCompat.Button.Borderless"
+              android:background= "?attr/colorPrimary"
+              android:textColor="@color/white"
+              android:textSize="27dp"
+              />
+
       </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
