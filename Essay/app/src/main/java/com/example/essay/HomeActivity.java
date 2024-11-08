@@ -24,10 +24,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.essay.component.user.UserInfo;
+import com.example.essay.models.history.HistoryModel;
 import com.example.essay.services.AccountService;
 import com.example.essay.services.ServiceCallback;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnItemSelectedListener
 {
@@ -90,8 +95,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     }
                 }
         );
+        saveLoginHistory(UserName);
     }
-
+    // Hàm lưu lịch sử đăng nhập
+    private void saveLoginHistory(String user) {
+        AccountService accountService = new AccountService();
+        accountService.saveHistory(user);
+    }
     private void HandleAppBarButton(View view)
     {
         int id = view.getId();

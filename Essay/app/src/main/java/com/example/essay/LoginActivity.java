@@ -13,9 +13,15 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.essay.models.account.AccountRepository;
+import com.example.essay.models.history.HistoryModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class LoginActivity extends AppCompatActivity {
@@ -135,7 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 Log.d("Login", "Login successful");
                                 //txtErr.setText("đăng nhập thành công");
+                                // Gọi hàm lưu lịch sử đăng nhập
+
                                 saveTokenLocally(user, name, userRole);
+
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 intent.putExtra("user", user);
                                 intent.putExtra("name", name);

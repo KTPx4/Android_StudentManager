@@ -1,20 +1,44 @@
 package com.example.essay.services;
 
+import android.content.Intent;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import com.example.essay.HomeActivity;
+import com.example.essay.LoginActivity;
 import com.example.essay.models.account.AccountModel;
+import com.example.essay.models.history.HistoryModel;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AccountService {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    public void saveHistory(String user)
+    {
+        // Định dạng ngày giờ theo yêu cầu
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+        String currentDate = dateFormat.format(new Date());
+        Log.d("HISTORy", "saveLoginHistory: ");
+        // Tạo một bản ghi lịch sử
+        HistoryModel historyRecord = new HistoryModel(user, currentDate);
+
+        // Lưu vào Firestore
+        db.collection("histories")
+                .add(historyRecord)
+                .addOnSuccessListener(documentReference -> Log.d("History", "Login history saved successfully"))
+                .addOnFailureListener(e -> Log.w("History", "Error saving login history", e));
+    }
     public void createUser(String user, String pass, String name, String phone, String birthDay, String role, String email, ServiceCallback callback) {
         checkUserExists(user, new ServiceCallback() {
             @Override
@@ -100,6 +124,7 @@ public class AccountService {
         });
     }
 
+
     public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, String email, ServiceCallback callback) {
         // Tìm tài liệu của người dùng bằng user (username)
         db.collection("accounts")
@@ -140,7 +165,57 @@ public class AccountService {
                 });
     }
 
+    public void changePass(String user, String oldPass, String newPass, ServiceCallback callback)
+    {
+        db.collection("accounts")
+                .whereEqualTo("user", user)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            // Lấy tài liệu đầu tiên (vì user là duy nhất)
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
+                            // Lấy mật khẩu và role từ Firestore
+                            String storedPassword = document.getString("pass");
+                            String userRole = document.getString("role");
+                            String name = document.getString("name");
+                            String phone = document.getString("phone");
+                            String birth = document.getString("birthDay");
+                            String email = document.getString("email");
+
+                            // So sánh password
+                            if (oldPass.equals(storedPassword))
+                            {
+                                // Nếu mật khẩu cũ khớp, cập nhật mật khẩu mới
+                                document.getReference()
+                                        .update("pass", newPass)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // Gọi lại thành công
+                                            callback.onSuccess();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // Gọi lại khi có lỗi trong quá trình cập nhật
+                                            callback.onFailure(new Exception("Failed to update password"));
+                                        });
+                            }
+                            else
+                            {
+                               callback.onFailure(new Exception("Password not match"));
+                            }
+                        }
+                        else
+                        {
+                            callback.onFailure(new Exception("User not found"));
+
+                        }
+                    } else {
+                        callback.onFailure(new Exception("Application error. Try again!"));
+
+                        Log.w("Changepass", "Error getting documents.", task.getException());
+                    }
+                });
+    }
     public void deleteAccount(String user, ServiceCallback callback) {
         // Truy vấn để tìm tài khoản với tên người dùng đã nhập
         db.collection("accounts")
