@@ -231,12 +231,14 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 if(type.equals("history"))
                 {
                     intent = new Intent(getContext(), HistoryInfo.class);
+                    intent.putExtra("type", "only");
+                    intent.putExtra("user", User.getUser());
                 }
                 else{
                     intent = new Intent(getContext(), UserInfo.class);
+                    intent.putExtra("type", type);
                 }
 
-                intent.putExtra("type", type);
                 intent.putExtra("role", User.getRole());
                 intent.putExtra("name", User.getName());
                 intent.putExtra("user", User.getUser());
