@@ -6,5 +6,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".component.user.HistoryInfo">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="?attr/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="wrap_content"
+
+                android:layout_height="65dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:title="History Login"
+                app:titleTextColor="@color/white"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <EditText
+        android:id="@+id/txt_info_search"
+        android:hint="Search name...."
+        android:paddingHorizontal="15dp"
+        android:textColorHint="@color/grey"
+        android:layout_width="290dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableRight="@drawable/ic_find"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/loading_info_history"
+        android:indeterminateTint="@color/blue"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_info_history"
+        app:layout_constraintTop_toBottomOf="@id/txt_info_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="15dp"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

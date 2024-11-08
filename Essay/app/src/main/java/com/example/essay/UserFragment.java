@@ -195,8 +195,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             String email = document.getString("email");
 
                             countALl ++;
-                            if(role.equalsIgnoreCase("manager")) countManager++;
-                            else if(role.equalsIgnoreCase("employee")) countEmployee++;
+                            if(role !=null && role.toLowerCase().equals("manager")) countManager++;
+                            else if(role !=null && role.toLowerCase().equals("employee")) countEmployee++;
                             // Kiểm tra xem tên có chứa chuỗi tìm kiếm hay không
                             if (name != null &&
                                     name.toLowerCase().contains(searchName.toLowerCase()) &&
