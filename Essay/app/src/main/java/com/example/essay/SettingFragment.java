@@ -1,23 +1,35 @@
 package com.example.essay;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.essay.component.user.HistoryInfo;
 import com.example.essay.component.user.UserInfo;
+import com.example.essay.services.AccountService;
+import com.example.essay.services.ServiceCallback;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -172,7 +184,79 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
         }
         else if(id == R.id.btn_setting_change_pass)
         {
+            // Tạo AlertDialog mới cho Fast Create với hai trường nhập User và Name
+            AlertDialog.Builder passDialog = new AlertDialog.Builder(getContext());
+            passDialog.setTitle("Change password");
 
+            // Inflate layout từ XML
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            @SuppressLint("InflateParams")
+            View dialogView = inflater.inflate(R.layout.setting_dialog_change_pass, null);
+
+
+            EditText oldPass = dialogView.findViewById(R.id.dialog_setting_oldPass);
+            EditText newPass = dialogView.findViewById(R.id.dialog_setting_newPass);
+            EditText confirmInput = dialogView.findViewById(R.id.dialog_setting_confirmPass);
+
+            passDialog.setView(dialogView);
+
+            // Nút Xác nhận
+            passDialog.setPositiveButton("Confirm", (dialogInterface, i) -> {});
+
+            // Nút Hủy
+            passDialog.setNegativeButton("Cancel", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+            });
+
+            // Hiển thị AlertDialog Fast Create
+            AlertDialog dialog =  passDialog.create() ;
+            dialog.show();
+            Button buttonOk = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button buttonCancel = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            buttonOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String old = oldPass.getText().toString();
+                    String newP = newPass.getText().toString();
+                    String confirm = confirmInput.getText().toString();
+
+                    if (old.isEmpty() || newP.isEmpty() || confirm.isEmpty())
+                    {
+                        Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else if(!newP.equals(confirm))
+                    {
+                        Toast.makeText(getContext(), "Confirm password not match", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    AccountService accountService = new AccountService();
+                    accountService.changePass(UserName, old, newP, new ServiceCallback() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(getContext(), "Change password success", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        @Override
+                        public void onResult(boolean exists) {
+
+                        }
+                    });
+                }
+            });
         }
     }
 
