@@ -6,7 +6,8 @@
     android:orientation="horizontal"
     android:layout_marginTop="10dp"
     android:background="@color/white"
-    android:padding="6dp">
+    android:paddingVertical="6dp"
+   >
 
     <ImageView
         android:id="@+id/history_im_user"

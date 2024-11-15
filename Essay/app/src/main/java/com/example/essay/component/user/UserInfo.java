@@ -126,15 +126,15 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
 
     private boolean isCanSave()
     {
-        if(txtName.getText().toString().isEmpty()) txtErr.setText("Please input Name");
+        if(txtName.getText().toString().isEmpty()) txtErr.setText("Please input name");
 
-        else if(txtUser.getText().toString().isEmpty()) txtErr.setText("Please input User");
+        else if(txtUser.getText().toString().isEmpty()) txtErr.setText("Please input user");
 
-        else if(txtPhone.getText().toString().isEmpty()) txtErr.setText("Please input Phone");
+        else if(txtPhone.getText().toString().isEmpty()) txtErr.setText("Please input phone");
 
-        else if(txtBirth.getText().toString().isEmpty()) txtErr.setText("Please choise Birth Day");
+        else if(txtBirth.getText().toString().isEmpty()) txtErr.setText("Please choose birthday");
 
-        else if( txtRole.getText().toString().isEmpty()) txtErr.setText("Please choise Role");
+        else if( txtRole.getText().toString().isEmpty()) txtErr.setText("Please choose role");
         else if( txtEmail.getText().toString().isEmpty()) txtErr.setText("Please input email");
         else if(!Patterns.EMAIL_ADDRESS.matcher(txtEmail.getText().toString()).matches())txtErr.setText("Email not invalid");
 
