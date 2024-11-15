@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -36,6 +37,7 @@ public class HistoryInfo extends AppCompatActivity {
     private static String typeStart = "all";
     private EditText txtSearch;
     private RecyclerView rvHistory;
+    private Button btnClose;
     private Handler searchHandler = new Handler();
     private Runnable searchRunnable;
     private String UserName = "";
@@ -56,6 +58,8 @@ public class HistoryInfo extends AppCompatActivity {
         rvHistory = findViewById(R.id.rv_info_history);
         rvHistory.setLayoutManager(new LinearLayoutManager(this));
         loadingProcess = findViewById(R.id.loading_info_history);
+        btnClose = findViewById(R.id.btn_history_close);
+        btnClose.setOnClickListener(v -> finish());
 
         inputSearchListen();
 

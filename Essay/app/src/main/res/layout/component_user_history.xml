@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".component.user.HistoryInfo">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -66,14 +67,28 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_info_history"
         android:layout_width="361dp"
-        android:layout_height="686dp"
+        android:layout_height="0dp"
         android:layout_margin="15dp"
-        android:padding="5dp"
         android:paddingBottom="30dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_info_search"
+        app:layout_constraintBottom_toTopOf="@+id/btn_history_close"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btn_history_close"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Close"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/blue"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
