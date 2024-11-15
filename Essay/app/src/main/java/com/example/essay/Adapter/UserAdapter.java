@@ -59,7 +59,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = userList.get(position);
         holder.bind(user);
         holder.nameTextView.setText(user.getName());
-        holder.txtRole.setText(user.getRole() + " - " + user.getUser());
+        holder.txtRole.setText(user.getRole().toLowerCase() + " - " + user.getUser());
         holder.txtUser.setText(user.getUser());
 
         Glide.with(holder.itemView.getContext())
