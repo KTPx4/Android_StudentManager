@@ -147,34 +147,29 @@
     <Button
         android:id="@+id/btn_info_close"
         android:layout_width="150dp"
-        android:text="Close"
-        android:fontFamily="sans-serif-medium"
         android:layout_height="55dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline2"
+        android:fontFamily="sans-serif-medium"
+        android:text="Close"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_err"
         app:layout_constraintEnd_toStartOf="@+id/btn_info_save"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="635dp" />
 
     <Button
         android:id="@+id/btn_info_save"
         android:layout_width="150dp"
         android:layout_height="55dp"
         android:backgroundTint="@color/blue_2"
-        android:textColor="@color/white"
-        android:text="Save"
         android:fontFamily="sans-serif-medium"
+        android:text="Save"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_err"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_info_close"
-        app:layout_constraintTop_toBottomOf="@+id/guideline2"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
+        tools:layout_editor_absoluteY="635dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
