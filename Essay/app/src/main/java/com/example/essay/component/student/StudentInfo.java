@@ -46,6 +46,7 @@ public class StudentInfo extends AppCompatActivity {
     private LinearLayout certificatesLayout;
     private RecyclerView recyCertificate;
     private String typeStart = "create";
+    private String Role;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,7 @@ public class StudentInfo extends AppCompatActivity {
         // Get the studentId and mode (add or edit) from intent
         studentId = getIntent().getStringExtra("studentId");
         String mode = getIntent().getStringExtra("mode");
+        Role = getIntent().getStringExtra("role");
 
         if ("edit".equals(mode)) {
             // If in edit mode, load the student data
@@ -89,6 +91,8 @@ public class StudentInfo extends AppCompatActivity {
             // If in info mode, load the student data but make fields non-editable
             loadStudentData(studentId);
             setFieldsNonEditable();
+            LinearLayout ln = findViewById(R.id.layout_action_certificate);
+            ln.setVisibility(View.GONE);
 //            certificatesLayout.setVisibility(View.VISIBLE);
             typeStart = "info";
 

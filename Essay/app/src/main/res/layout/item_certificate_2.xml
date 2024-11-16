@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:background="@color/white"
     android:padding="8dp">
 
     <LinearLayout
@@ -19,6 +20,13 @@
             android:text="Certificate Name"
             android:textSize="16sp"
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Id"
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tvIssue"
@@ -40,6 +48,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_weight="1"
+        android:layout_gravity="center"
         android:gravity="end">
 
         <Button
