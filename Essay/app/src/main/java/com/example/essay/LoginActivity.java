@@ -135,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                             String phone = document.getString("phone");
                             String birth = document.getString("birthDay");
                             String email = document.getString("email");
+                            String linAvt = document.getString("linkAvt");
 
                             // So sánh password
                             if (pass.equals(storedPassword))
@@ -152,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("phone", phone);
                                 intent.putExtra("birth", birth);
                                 intent.putExtra("email", email);
+                                intent.putExtra("linkAvt", linAvt);
 
                                 startActivity(intent);
 

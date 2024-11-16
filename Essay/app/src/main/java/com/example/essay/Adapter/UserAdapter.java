@@ -15,13 +15,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.essay.R;
 import com.example.essay.UserFragment;
 
 import com.example.essay.models.account.User;
 import com.example.essay.services.AccountService;
 import com.example.essay.services.ServiceCallback;
+import com.example.essay.services.SvgLoader;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.List;
@@ -59,13 +59,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = userList.get(position);
         holder.bind(user);
         holder.nameTextView.setText(user.getName());
-        holder.txtRole.setText(user.getRole() + " - " + user.getUser());
+        holder.txtRole.setText(user.getRole().toLowerCase() + " - " + user.getUser());
         holder.txtUser.setText(user.getUser());
 
-        Glide.with(holder.itemView.getContext())
-                .load(user.getLinkAvt()) // Đường dẫn tới ảnh
-                .error(R.drawable.ic_person_foreground)
-                .into(holder.avtUser); // ImageButton bạn muốn thiết lập ảnh
+        SvgLoader.loadSvgFromUrl(user.getLinkAvt(), holder.avtUser);
+
+//        Glide.with(holder.itemView.getContext())
+//                .load(user.getLinkAvt()) // Đường dẫn tới ảnh
+//                .error(R.drawable.ic_person_foreground)
+//                .into(holder.avtUser); // ImageButton bạn muốn thiết lập ảnh
 
         holder.setRefreshListener(refreshListener);
         holder.btnMore.setOnClickListener(new View.OnClickListener() {

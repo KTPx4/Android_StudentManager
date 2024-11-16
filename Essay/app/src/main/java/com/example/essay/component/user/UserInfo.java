@@ -2,6 +2,7 @@ package com.example.essay.component.user;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -12,7 +13,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +24,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.essay.R;
 import com.example.essay.services.AccountService;
 import com.example.essay.services.ServiceCallback;
+import com.example.essay.services.SvgLoader;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Calendar;
@@ -35,7 +39,27 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
     ImageButton btnEditName;
     TextView txtErr, txtName;
     EditText  txtUser, txtPhone, txtBirth, txtEmail;
-    ImageButton btnAvt;
+    ImageView btnAvt;
+    private static String selectAVT = "https://api.dicebear.com/9.x/adventurer/svg?seed=Brian";
+
+    private String[] imageUrls = {
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Brian",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Ryan",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Emery",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Easton",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Oliver",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Sawyer",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Avery",
+            "https://api.dicebear.com/9.x/adventurer/svg?seed=Aiden",
+            "https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=Sadie",
+            "https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=Eliza",
+            "https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=Ryan",
+            "https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=Luis",
+            "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Sadie",
+            "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jack",
+            "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Kimberly",
+            "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Brooklynn"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +104,10 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
 
         intiStart(itent);
     }
+    private void setAvt(String linkAvt)
+    {
+        SvgLoader.loadSvgFromUrl(linkAvt, btnAvt);
+    }
     private void intiStart(Intent itent)
     {
         if(typeStart.equals("create")) return;
@@ -92,10 +120,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         txtBirth.setText(itent.getStringExtra("birth"));
         txtEmail.setText(itent.getStringExtra("email"));
 
-        Glide.with(getApplicationContext())
-                .load(itent.getStringExtra("linkAvt")) // Đường dẫn tới ảnh
-                .error(R.drawable.ic_person_foreground)
-                .into(btnAvt); // ImageButton bạn muốn thiết lập ảnh
+        setAvt(itent.getStringExtra("linkAvt"));
 
         switch (typeStart)
         {
@@ -126,15 +151,15 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
 
     private boolean isCanSave()
     {
-        if(txtName.getText().toString().isEmpty()) txtErr.setText("Please input Name");
+        if(txtName.getText().toString().isEmpty()) txtErr.setText("Please input name");
 
-        else if(txtUser.getText().toString().isEmpty()) txtErr.setText("Please input User");
+        else if(txtUser.getText().toString().isEmpty()) txtErr.setText("Please input user");
 
-        else if(txtPhone.getText().toString().isEmpty()) txtErr.setText("Please input Phone");
+        else if(txtPhone.getText().toString().isEmpty()) txtErr.setText("Please input phone");
 
-        else if(txtBirth.getText().toString().isEmpty()) txtErr.setText("Please choise Birth Day");
+        else if(txtBirth.getText().toString().isEmpty()) txtErr.setText("Please choose birthday");
 
-        else if( txtRole.getText().toString().isEmpty()) txtErr.setText("Please choise Role");
+        else if( txtRole.getText().toString().isEmpty()) txtErr.setText("Please choose role");
         else if( txtEmail.getText().toString().isEmpty()) txtErr.setText("Please input email");
         else if(!Patterns.EMAIL_ADDRESS.matcher(txtEmail.getText().toString()).matches())txtErr.setText("Email not invalid");
 
@@ -166,7 +191,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 String email = txtEmail.getText().toString();
 
                 AccountService userService = new AccountService();
-                userService.createUser(user, pass, name, phone, birth, role, email, new ServiceCallback() {
+                userService.createUser(user, pass, name, phone, birth, role, email, selectAVT, new ServiceCallback() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Show success message
@@ -214,7 +239,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                 String email = txtEmail.getText().toString();
 
                 AccountService userService = new AccountService();
-                userService.updateUser(user, pass, name, phone, birth, role, email, new ServiceCallback() {
+                userService.updateUser(user, pass, name, phone, birth, role, email, selectAVT, new ServiceCallback() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Show success message
@@ -229,6 +254,7 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
                         resultIntent.putExtra("birth", birth);
                         resultIntent.putExtra("email", email);
                         resultIntent.putExtra("role", role);
+                        resultIntent.putExtra("linkAvt", selectAVT);
 
                         setResult(RESULT_OK, resultIntent); // Đặt mã kết quả và Intent
                         finish(); // Kết thúc Activity B
@@ -301,7 +327,77 @@ public class UserInfo extends AppCompatActivity implements View.OnClickListener 
         {
             showDatePickerDialog();
         }
+        else if(id == R.id.avt_info_user)
+        {
+            showImageSelectionDialog();
+        }
     }
+
+    private void showImageSelectionDialog() {
+        // Tạo Dialog tùy chỉnh
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_image_selection);
+        dialog.setTitle("Select an Avatar");
+
+        // Lấy container để hiển thị danh sách ảnh
+        GridLayout imageContainer = dialog.findViewById(R.id.imageContainer);
+        imageContainer.setColumnCount(4); // Thiết lập số cột cho GridLayout
+
+        // Duyệt qua danh sách URL và tạo ImageView cho từng ảnh
+        for (String url : imageUrls) {
+            ImageView imageView = new ImageView(this);
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = 200;
+            params.height = 200;
+            params.setMargins(16, 16, 16, 16);
+            imageView.setLayoutParams(params);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            SvgLoader.loadSvgFromUrl(url, imageView);
+
+            // Thiết lập sự kiện click để chọn ảnh
+            imageView.setOnClickListener(v -> {
+                setAvt(url);
+                selectAVT = url;
+                if(!typeStart.equals("create"))
+                {
+                    AccountService accountService = new AccountService();
+                    accountService.updateAvatar(txtUser.getText().toString(), url, new ServiceCallback() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(getApplicationContext(),"Update avatar success", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss(); // Đóng Dialog
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResult(boolean exists) {
+
+                        }
+                    });
+                }
+                else {
+                    dialog.dismiss(); // Đóng Dialog
+
+                }
+
+            });
+
+            imageContainer.addView(imageView); // Thêm ImageView vào container
+        }
+
+        dialog.show(); // Hiển thị Dialog
+    }
+
 
     private void showDatePickerDialog() {
         // Lấy ngày hiện tại để đặt ngày mặc định cho DatePicker

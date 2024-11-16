@@ -7,12 +7,12 @@ public class AccountModel {
     private String phone;
     private String birthDay;
     private String role;
-    private String linkAvt;
+    private String linkAvt = "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Aidan";
     private String status;
     private String email;
 
     public AccountModel(){}
-    public  AccountModel(String username, String password, String name, String phone, String birthDay, String role, String email)
+    public  AccountModel(String username, String password, String name, String phone, String birthDay, String role, String email, String linkAvt)
     {
         this.user = username;
         this.pass = password;
@@ -23,6 +23,7 @@ public class AccountModel {
         this.linkAvt = "/";
         this.status = "normal";
         this.email = email;
+        this.linkAvt = linkAvt;
     }
 
     public String getEmail() {

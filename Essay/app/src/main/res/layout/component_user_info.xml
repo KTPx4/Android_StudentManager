@@ -7,7 +7,7 @@
     android:paddingHorizontal="25dp"
     android:background="@color/default_background">
 
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avt_info_user"
         android:layout_width="80dp"
         android:layout_height="80dp"
