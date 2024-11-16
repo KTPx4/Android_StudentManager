@@ -81,7 +81,9 @@ public class StudentFragment extends Fragment {
             sortDialogFragment.setTargetFragment(StudentFragment.this, 0);
             sortDialogFragment.show(getParentFragmentManager(), "SortDialog");
         });
+
         LinearLayout btnCertificate = rootView.findViewById(R.id.btnCertificate);
+
         btnCertificate.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CertificateActivity.class);
 

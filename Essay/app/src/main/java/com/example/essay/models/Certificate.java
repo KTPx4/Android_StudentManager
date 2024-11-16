@@ -4,13 +4,53 @@ public class Certificate {
     private String certificateId;
     private String certificateName;
     private String issuingOrganization;
+    private String IssueDate;
+    private String ExpDate;
+    private String StudentId;
     private boolean selected;
+
+    public Certificate() {
+    }
 
     // Constructor
     public Certificate(String certificateId, String certificateName, String issuingOrganization) {
         this.certificateId = certificateId;
         this.certificateName = certificateName;
         this.issuingOrganization = issuingOrganization;
+    }
+
+    public Certificate(String certificateId, String certificateName, String issuingOrganization, String issueDate, String expDate, String studentId, boolean selected) {
+        this.certificateId = certificateId;
+        this.certificateName = certificateName;
+        this.issuingOrganization = issuingOrganization;
+        IssueDate = issueDate;
+        ExpDate = expDate;
+        StudentId = studentId;
+        this.selected = selected;
+    }
+
+    public String getIssueDate() {
+        return IssueDate;
+    }
+
+    public void setIssueDate(String issueDate) {
+        IssueDate = issueDate;
+    }
+
+    public String getExpDate() {
+        return ExpDate;
+    }
+
+    public void setExpDate(String expDate) {
+        ExpDate = expDate;
+    }
+
+    public String getStudentId() {
+        return StudentId;
+    }
+
+    public void setStudentId(String studentId) {
+        StudentId = studentId;
     }
 
     // Getters and setters

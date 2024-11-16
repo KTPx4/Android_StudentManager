@@ -17,6 +17,7 @@
         android:weightSum="4">
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/btnCertificate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

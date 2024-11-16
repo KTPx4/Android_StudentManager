@@ -34,6 +34,9 @@
             android:name=".component.user.UserInfo"
             android:exported="false" />
         <activity
+            android:name=".component.student.CertificateInfo"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
