@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="6dp">
+
+    <TextView
+        android:id="@+id/txtID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:maxLines="1"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif"
+        android:text="SV0005"
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="13sp" />
+
+    <!-- Vertical layout for Name, Gender, and GPA -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0.6"
+        android:layout_marginStart="8dp">
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Kiều Thành Phát"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
+
+        <!-- Gender -->
+        <TextView
+            android:id="@+id/txtGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nam"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif" />
+        <!-- Age -->
+        <TextView
+            android:id="@+id/txtAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="19"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif" />
+        <!-- GPA -->
+        <TextView
+            android:id="@+id/txtGPA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8.6"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif" />
+    </LinearLayout>
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/btn_del"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/ic_delete"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="8dp"/>
+
+    <ImageButton
+        android:id="@+id/btn_edit"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/edit"
+        android:layout_marginStart="8dp"/>
+
+    <!-- Info Button -->
+    <ImageButton
+        android:id="@+id/btn_info"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/info"
+        android:layout_marginStart="8dp"/>
+</LinearLayout>

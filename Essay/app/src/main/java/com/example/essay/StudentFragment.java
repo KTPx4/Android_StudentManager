@@ -1,48 +1,47 @@
 package com.example.essay;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.essay.Adapter.StudentAdapter;
+import com.example.essay.component.student.CertificateActivity;
+import com.example.essay.component.student.SortDialogFragment;
+import com.example.essay.component.student.StudentInfo;
+import com.example.essay.models.Student;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StudentFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class StudentFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-
+    private RecyclerView recyclerView;
+    private StudentAdapter studentAdapter;
+    private List<Student> studentList = new ArrayList<>();
+    private FirebaseFirestore db;
+    private static boolean isAdmin = false;
+    private List<String> sortCriteria = new ArrayList<>();
     private String UserName;
     private String Role;
-    private static boolean isAdmin = false;
     public StudentFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StudentFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static StudentFragment newInstance(String param1, String param2) {
         StudentFragment fragment = new StudentFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,18 +49,124 @@ public class StudentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
         if (getArguments() != null) {
-            UserName = getArguments().getString(ARG_PARAM1);
-            Role = getArguments().getString(ARG_PARAM2);
-            if(Role.toLowerCase().equals("admin")) isAdmin = true;
-
+            UserName = getArguments().getString("param1");
+            Role = getArguments().getString("param2");
+            if (Role.toLowerCase().equals("admin")) isAdmin = true;
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_student, container, false);
+    public void onResume() {
+        super.onResume();
+        fetchStudentData();
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_student, container, false);
+
+        // Set up RecyclerView
+        recyclerView = rootView.findViewById(R.id.student_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayout btnArrange = rootView.findViewById(R.id.btnArrange);
+        btnArrange.setOnClickListener(v -> {
+            SortDialogFragment sortDialogFragment = new SortDialogFragment();
+            // Pass the current sort criteria to the dialog
+            Bundle args = new Bundle();
+            args.putStringArrayList("selectedCriteria", new ArrayList<>(sortCriteria));
+            sortDialogFragment.setArguments(args);
+            sortDialogFragment.setTargetFragment(StudentFragment.this, 0);
+            sortDialogFragment.show(getParentFragmentManager(), "SortDialog");
+        });
+        LinearLayout btnCertificate = rootView.findViewById(R.id.btnCertificate);
+        btnCertificate.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CertificateActivity.class);
+
+            startActivity(intent);
+        });
+
+        EditText editTextSearch = rootView.findViewById(R.id.editTextSearch);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                filterStudentList(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        // Fetch data from Firestore
+        fetchStudentData();
+
+        return rootView;
+    }
+    private void filterStudentList(String query) {
+        List<Student> filteredList = new ArrayList<>();
+        for (Student student : studentList) {
+            if (student.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(student);
+            }
+        }
+
+        // Update the adapter with the filtered list
+        if (studentAdapter != null) {
+            studentAdapter.updateStudentList(filteredList);
+        }
+    }
+    private void fetchStudentData() {
+        db.collection("students")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        studentList.clear();
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            Student student = document.toObject(Student.class);
+                            studentList.add(student);
+                        }
+
+                        // Create the StudentAdapter and set the RecyclerView
+                        if (getContext() != null) {
+                            studentAdapter = new StudentAdapter(getContext(), studentList);
+                            recyclerView.setAdapter(studentAdapter);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the error if data fetching fails
+                });
+    }
+
+    public void sortStudents(List<String> selectedCriteria) {
+        // Apply the sorting based on the selected criteria
+        if (selectedCriteria.contains("name")) {
+            Collections.sort(studentList, (s1, s2) -> s1.getName().compareTo(s2.getName()));
+        }
+        if (selectedCriteria.contains("score")) {
+            Collections.sort(studentList, (s1, s2) -> Double.compare(s1.getGPA(), s2.getGPA()));
+        }
+        if (selectedCriteria.contains("gender")) {
+            Collections.sort(studentList, (s1, s2) -> s1.getGender().compareTo(s2.getGender()));
+        }
+        if (selectedCriteria.contains("age")) {
+            Collections.sort(studentList, (s1, s2) -> Integer.compare(s1.getAge(), s2.getAge()));
+        }
+
+        // Update the RecyclerView with sorted data
+        if (studentAdapter != null) {
+            studentAdapter.notifyDataSetChanged();
+        }
+
+        sortCriteria = selectedCriteria;
+    }
+    public void resetStudentList() {
+        fetchStudentData();
+    }
+
 }

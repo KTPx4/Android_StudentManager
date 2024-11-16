@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="6dp">
+
+    <TextView
+        android:id="@+id/txtID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:maxLines="1"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif"
+        android:text="Cert"
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="13sp" />
+    <!-- Vertical layout for Name, Gender, and GPA -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0.6"
+        android:layout_marginStart="8dp">
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/txt_Certificate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Cybersecurity Certificate"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/txt_IssuingOrganization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Issuing Organization"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif" />
+
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/btndel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/ic_delete"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="8dp"/>
+
+    <ImageButton
+        android:id="@+id/btnedit"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/default_background"
+        android:src="@drawable/edit"
+        android:layout_marginStart="8dp"/>
+
+</LinearLayout>

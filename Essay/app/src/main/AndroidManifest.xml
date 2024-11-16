@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Essay"
         tools:targetApi="31">
+        <activity android:name=".component.student.ChooseCertificate"
+            android:exported="false"/>
+        <activity android:name=".component.student.AddCertificate"
+            android:exported="false"/>
+        <activity android:name=".component.student.CertificateActivity"
+            android:exported="false"/>
+        <activity android:name=".component.student.StudentInfo"
+            android:exported="false"/>
         <activity
             android:name=".component.user.HistoryInfo"
             android:exported="false" />
