@@ -19,16 +19,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.essay.component.user.HistoryInfo;
 import com.example.essay.component.user.UserInfo;
 import com.example.essay.services.AccountService;
 import com.example.essay.services.ServiceCallback;
+import com.example.essay.services.SvgLoader;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,19 +53,20 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
     private static final String ARG_PHONE = "phone";
     private static final String ARG_BIRTH = "birth";
     private static final String ARG_EMAIL = "email";
+    private static final String ARG_LINKAVT = "email";
 
 
     // TODO: Rename and change types of parameters
     private String UserName;
     private String Role;
-    private String Name, Phone, Birth, Email;
+    private String Name, Phone, Birth, Email, linkAvt;
     private static boolean isAdmin = false;
     private Button btnEdit, btnChangePass;
     private TextView txtName, txtRole, txtPhone, txtBirth, txtEmail;
     private ActivityResultLauncher<Intent> userInfoLauncher;
     private ProgressBar progressBar;
     private FirebaseFirestore db;
-
+    private ImageView btnAvt;
     private Button btnLogout ;
     public SettingFragment() {
         // Required empty public constructor
@@ -78,7 +82,7 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
      */
     // TODO: Rename and change types and number of parameters
 
-    public static SettingFragment newInstance(String param1, String param2, String name, String phone, String birth, String email) {
+    public static SettingFragment newInstance(String param1, String param2, String name, String phone, String birth, String email, String linkAvt) {
         SettingFragment fragment = new SettingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -87,6 +91,7 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
         args.putString(ARG_PHONE, phone);
         args.putString(ARG_BIRTH, birth);
         args.putString(ARG_EMAIL, email);
+        args.putString(ARG_LINKAVT, linkAvt);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,6 +106,8 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
             Phone = getArguments().getString(ARG_PHONE);
             Birth = getArguments().getString(ARG_BIRTH);
             Email = getArguments().getString(ARG_EMAIL);
+            linkAvt = getArguments().getString(ARG_LINKAVT);
+
             if(Role.toLowerCase().equals("admin")) isAdmin = true;
         }
     }
@@ -117,7 +124,10 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
         txtPhone = view.findViewById(R.id.txt_setting_phone);
         txtBirth = view.findViewById(R.id.txt_setting_birth);
         txtEmail = view.findViewById(R.id.txt_setting_email);
+        btnAvt = view.findViewById(R.id.avatarImageView);
         progressBar = view.findViewById(R.id.fragment_setting);
+        setAvt();
+
         db = FirebaseFirestore.getInstance();
 
         txtName.setText(Name);
@@ -129,6 +139,7 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
 
         btnEdit.setOnClickListener(this);
         btnChangePass.setOnClickListener(this);
+
         userInfoLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -144,12 +155,14 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
                             Phone = result.getData().getStringExtra("phone");
                             Birth = result.getData().getStringExtra("birth");
                             Email = result.getData().getStringExtra("email");
+                            linkAvt = result.getData().getStringExtra("linkAvt");
 
                             txtName.setText(Name);
                             txtPhone.setText(Phone);
                             txtBirth.setText(Birth);
                             txtEmail.setText(Email);
                             txtRole.setText(Role);
+                            setAvt();
                         }
                     }
                 }
@@ -163,6 +176,14 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
 
         }
         return view;
+    }
+    private void setAvt()
+    {
+        SvgLoader.loadSvgFromUrl(linkAvt, btnAvt);
+//        Glide.with(getContext())
+//                .load(linkAvt) // Đường dẫn tới ảnh
+//                .error(R.drawable.ic_person_foreground)
+//                .into(btnAvt); // ImageButton bạn muốn thiết lập ảnh
     }
 
     @Override
@@ -179,6 +200,7 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
             intent.putExtra("phone", Phone);
             intent.putExtra("birth", Birth);
             intent.putExtra("email", Email);
+            intent.putExtra("linkAvt", linkAvt);
 
             userInfoLauncher.launch(intent);
         }
@@ -285,18 +307,21 @@ public class SettingFragment extends Fragment implements  View.OnClickListener{
                             String phone = document.getString("phone");
                             String birth = document.getString("birthDay");
                             String email = document.getString("email");
+                            String link = document.getString("linkAvt");
 
                             Role = userRole;
                             Name = name;
                             Phone = phone;
                             Birth = birth;
                             Email = email;
+                            linkAvt = link;
 
                             txtName.setText(Name);
                             txtPhone.setText(Phone);
                             txtBirth.setText(Birth);
                             txtEmail.setText(Email);
                             txtRole.setText(Role);
+                            setAvt();
 
                         }
                         else

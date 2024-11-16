@@ -42,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private static String Birth ="";
     private static String Email ="";
     private static String Name ="";
+    private static String linkAvt ="";
     private Toolbar toolbar;
     private static String action ="users";
 
@@ -244,6 +245,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         Phone = intent.getStringExtra("phone");
         Birth = intent.getStringExtra("birth");
         Email = intent.getStringExtra("email");
+        linkAvt = intent.getStringExtra("linkAvt");
 
         if(UserName.isEmpty() || Role.isEmpty())
         {
@@ -304,7 +306,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             toolbar.setTitle("Setting");
             btnAdd.setVisibility(View.INVISIBLE);
             btnLogout.setVisibility(View.VISIBLE);
-            settingFragment = SettingFragment.newInstance(UserName, Role, Name, Phone, Birth, Email);
+            settingFragment = SettingFragment.newInstance(UserName, Role, Name, Phone, Birth, Email, linkAvt);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.flFragment, settingFragment)
