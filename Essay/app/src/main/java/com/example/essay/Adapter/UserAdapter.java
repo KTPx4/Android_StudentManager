@@ -150,6 +150,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             this.isAdmin = isAdmin;
             if(!this.isAdmin){
                 btnDelete.setVisibility(View.INVISIBLE);
+                btnMore.setVisibility(View.INVISIBLE);
             }
         }
 
