@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Certificate ID"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+    <EditText
+        android:id="@+id/editText_CertificateID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter certificate id"
+        android:padding="8dp" />
+    <!-- Certificate Name Field -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Certificate Name"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="4dp" />
+    <EditText
+        android:id="@+id/editText_CertificateName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter certificate name"
+        android:padding="8dp" />
+
+    <!-- Issuing Organization Field -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Issuing Organization"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:paddingTop="16dp"
+        android:paddingBottom="4dp" />
+    <EditText
+        android:id="@+id/editText_IssuingOrganization"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter issuing organization"
+        android:padding="8dp" />
+
+    <!-- Save and Cancel Buttons for Certificates -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <Button
+            android:id="@+id/btn_info_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Close"
+            android:layout_marginTop="16dp"/>
+        <Button
+            android:id="@+id/buttonSaveCertificate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/green"/>
+    </LinearLayout>
+
+</LinearLayout>

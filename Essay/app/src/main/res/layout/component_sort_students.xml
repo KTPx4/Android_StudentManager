@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/sortLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select sort criteria"
+        android:textSize="18sp"
+        android:paddingBottom="8dp"/>
+
+    <CheckBox
+        android:id="@+id/sortByName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sort by name"
+        android:paddingBottom="8dp"/>
+
+    <CheckBox
+        android:id="@+id/sortByScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sort by score"
+        android:paddingBottom="8dp"/>
+
+    <CheckBox
+        android:id="@+id/sortBygender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sort by gender"
+        android:paddingBottom="8dp"/>
+
+    <CheckBox
+        android:id="@+id/sortByAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sort by Age"
+        android:paddingBottom="8dp"/>
+
+    <Button
+        android:id="@+id/applySortButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        android:backgroundTint="@color/green"
+        android:paddingTop="16dp"/>
+</LinearLayout>

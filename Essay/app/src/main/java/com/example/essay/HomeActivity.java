@@ -23,6 +23,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.essay.component.student.StudentInfo;
 import com.example.essay.component.user.UserInfo;
 import com.example.essay.models.history.HistoryModel;
 import com.example.essay.services.AccountService;
@@ -129,7 +130,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
         else if(action.equals("students"))
         {
-
+            Intent intent = new Intent(this, StudentInfo.class);
+            startActivity(intent);
         }
         else // setting - logout
         {
