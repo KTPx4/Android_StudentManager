@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Certificate Name -->
+    <TextView
+        android:id="@+id/tvCertificateNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Certificate Name"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etCertificateName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""
+        android:inputType="text"
+        android:padding="8dp"
+        android:background="@android:drawable/editbox_background" />
+    <!-- Certificate Name -->
+    <TextView
+        android:id="@+id/tvCertificateIdLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Certificate Id"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etCertificateId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""
+        android:inputType="text"
+        android:padding="8dp"
+        android:background="@android:drawable/editbox_background" />
+
+    <!-- Issue Date -->
+    <TextView
+        android:id="@+id/tvIssueDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Issue Date"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvIssueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select issue date"
+        android:padding="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:gravity="center_vertical"
+        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <!-- Expiration Date -->
+    <TextView
+        android:id="@+id/tvExpDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expiration Date"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvExpDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select expiration date"
+        android:padding="8dp"
+        android:background="@android:drawable/editbox_background"
+        android:gravity="center_vertical"
+        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+        android:focusable="true"
+        android:clickable="true" />
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btnCloseCertificate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/grey"
+        android:textColor="@android:color/white"
+    />
+
+    <Button
+        android:id="@+id/btnSaveCertificate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Certificate"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

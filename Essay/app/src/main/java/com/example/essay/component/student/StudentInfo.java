@@ -2,6 +2,7 @@ package com.example.essay.component.student;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,11 +14,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.essay.Adapter.CertificateAdapter2;
 import com.example.essay.R;
 import com.example.essay.component.student.ChooseCertificate;
+import com.example.essay.models.CertificateModel;
 import com.example.essay.models.Student;
+import com.example.essay.services.CallbackGetCertificate;
+import com.example.essay.services.StudentService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StudentInfo extends AppCompatActivity {
@@ -37,7 +44,8 @@ public class StudentInfo extends AppCompatActivity {
     private FirebaseFirestore db;
     private String studentId;
     private LinearLayout certificatesLayout;
-
+    private RecyclerView recyCertificate;
+    private String typeStart = "create";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +63,12 @@ public class StudentInfo extends AppCompatActivity {
         txtGPA = findViewById(R.id.txt_GPA);
         spinnerGender = findViewById(R.id.spinner_Gender);
         certificatesLayout = findViewById(R.id.certificates_Layout);
-        buttonAddCertificate = findViewById(R.id.button_AddCetificate);
+        buttonAddCertificate = findViewById(R.id.btn_add_certificate);
         edit_certificatetext = findViewById(R.id.edit_certificatetext);
         btnClose = findViewById(R.id.btn_info_close);
         buttonAddStudent = findViewById(R.id.buttonAddStudent);
-
+        recyCertificate = findViewById(R.id.list_certificate);
+        recyCertificate.setLayoutManager(new LinearLayoutManager(this));
         // Set up Gender Spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_array, android.R.layout.simple_spinner_item);
@@ -73,23 +82,32 @@ public class StudentInfo extends AppCompatActivity {
         if ("edit".equals(mode)) {
             // If in edit mode, load the student data
             loadStudentData(studentId);
-            certificatesLayout.setVisibility(View.VISIBLE);
+//            certificatesLayout.setVisibility(View.VISIBLE);
+            typeStart = "edit";
+
         } else if ("info".equals(mode)) {
             // If in info mode, load the student data but make fields non-editable
             loadStudentData(studentId);
             setFieldsNonEditable();
-            certificatesLayout.setVisibility(View.VISIBLE);
+//            certificatesLayout.setVisibility(View.VISIBLE);
+            typeStart = "info";
+
         } else {
             // If in add mode, generate a new student ID
             getMaxStudentId();
+            typeStart = "create";
+
         }
         buttonAddCertificate.setOnClickListener(v -> {
-            Intent intent = new Intent(StudentInfo.this, ChooseCertificate.class);
+            Intent intent = new Intent(StudentInfo.this, CertificateInfo.class);
+            intent.putExtra("type", "create");
             intent.putExtra("studentId", studentId); // Truyền studentId nếu cần
-            startActivityForResult(intent, 1); // Request code là 1
+          startActivityForResult(intent, 1); // Request code là 1
         });
+
         // Close button event
         btnClose.setOnClickListener(v -> finish());
+
         // Add student button event (works for both adding, editing and viewing)
         buttonAddStudent.setOnClickListener(v -> {
             if ("edit".equals(mode)) {
@@ -129,18 +147,41 @@ public class StudentInfo extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(StudentInfo.this, "Failed to load student data", Toast.LENGTH_SHORT).show();
                 });
+
+        StudentService studentService = new StudentService();
+        studentService.getAllCertificate(studentId, new CallbackGetCertificate() {
+            @Override
+            public void onSuccess(List<CertificateModel> listCertificate) {
+                boolean isEdit = typeStart.equals("edit");
+                CertificateAdapter2 adap = new CertificateAdapter2(listCertificate, isEdit);
+                Log.d("Student info", "onSuccess: ");
+                recyCertificate.setAdapter(adap);
+            }
+
+            @Override
+            public void onFailure(String mess) {
+                Toast.makeText(getApplicationContext(), "Load list certificate failed", Toast.LENGTH_SHORT).show();
+                Log.d("STUDENT INFO - LOAD CERTIFICATE", "onFailure: " + mess);
+            }
+        });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            ArrayList<String> selectedCertificates = data.getStringArrayListExtra("selectedCertificates");
-            if (selectedCertificates != null) {
-                String certificatesText = String.join(", ", selectedCertificates);
-                edit_certificatetext.setText(certificatesText);
-            }
+//            ArrayList<String> selectedCertificates = data.getStringArrayListExtra("selectedCertificates");
+//            if (selectedCertificates != null) {
+//                String certificatesText = String.join(", ", selectedCertificates);
+//                edit_certificatetext.setText(certificatesText);
+//            }
+            loadStudentData(studentId);
+
         }
+
+        // Kiểm tra requestCode và resultCode
+
     }
     // Method to update student data
     private void updateStudent() {
@@ -296,4 +337,6 @@ public class StudentInfo extends AppCompatActivity {
         buttonAddCertificate.setVisibility(View.GONE);
         buttonAddStudent.setVisibility(View.GONE);
     }
+
+
 }
