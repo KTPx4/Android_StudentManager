@@ -245,6 +245,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 intent.putExtra("phone", User.getPhone());
                 intent.putExtra("birth", User.getBirth());
                 intent.putExtra("email", User.getEmail());
+                intent.putExtra("linkAvt", User.getLinkAvt());
+
 
                 userInfoLauncher.launch(intent);
 

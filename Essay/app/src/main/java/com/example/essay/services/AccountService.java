@@ -39,7 +39,8 @@ public class AccountService {
                 .addOnSuccessListener(documentReference -> Log.d("History", "Login history saved successfully"))
                 .addOnFailureListener(e -> Log.w("History", "Error saving login history", e));
     }
-    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, String email, ServiceCallback callback) {
+
+    public void createUser(String user, String pass, String name, String phone, String birthDay, String role, String email, String linkAvt, ServiceCallback callback) {
         checkUserExists(user, new ServiceCallback() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -65,7 +66,7 @@ public class AccountService {
                 else
                 {
                     // User does not exist, proceed to create
-                    AccountModel newUser = new AccountModel(user, pass, name, phone, birthDay, role, email);
+                    AccountModel newUser = new AccountModel(user, pass, name, phone, birthDay, role, email, linkAvt);
 
                     db.collection("accounts")
                             .add(newUser)
@@ -81,6 +82,7 @@ public class AccountService {
             }
         });
     }
+
     public void fastCreate(String user, String name, String role, ServiceCallback callback) {
         checkUserExists(user, new ServiceCallback() {
             @Override
@@ -107,7 +109,7 @@ public class AccountService {
                 else
                 {
                     // User does not exist, proceed to create
-                    AccountModel newUser = new AccountModel(user, user, name, "", "1/1/2003", role, "");
+                    AccountModel newUser = new AccountModel(user, user, name, "", "1/1/2003", role, "" , "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Aidan");
 
                     db.collection("accounts")
                             .add(newUser)
@@ -125,7 +127,7 @@ public class AccountService {
     }
 
 
-    public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, String email, ServiceCallback callback) {
+    public void updateUser(String user, String newPass, String newName, String newPhone, String newBirthDay, String newRole, String email, String linkAvt, ServiceCallback callback) {
         // Tìm tài liệu của người dùng bằng user (username)
         db.collection("accounts")
                 .whereEqualTo("user", user) // Tìm kiếm theo username
@@ -144,6 +146,8 @@ public class AccountService {
                         updates.put("birthDay", newBirthDay);
                         updates.put("role", newRole);
                         updates.put("email", email);
+                        updates.put("linkAvt", linkAvt);
+
                         // Cập nhật tài liệu
                         docRef.update(updates)
                                 .addOnSuccessListener(aVoid -> {
@@ -216,6 +220,40 @@ public class AccountService {
                     }
                 });
     }
+
+
+    public void updateAvatar(String user, String newAvatarLink, ServiceCallback callback) {
+        // Tìm tài liệu của người dùng bằng user (username)
+        db.collection("accounts")
+                .whereEqualTo("user", user) // Tìm kiếm theo username
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Người dùng tồn tại, cập nhật thông tin
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0); // Giả sử chỉ có 1 tài liệu
+                        DocumentReference docRef = document.getReference();
+
+                        // Cập nhật link avatar
+                        docRef.update("linkAvt", newAvatarLink)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Cập nhật thành công
+                                    callback.onSuccess();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Xảy ra lỗi khi cập nhật
+                                    callback.onFailure(e);
+                                });
+                    } else {
+                        // Người dùng không tồn tại, trả về lỗi
+                        callback.onFailure(new Exception("User does not exist"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Xảy ra lỗi khi tìm kiếm người dùng
+                    callback.onFailure(e);
+                });
+    }
+
     public void deleteAccount(String user, ServiceCallback callback) {
         // Truy vấn để tìm tài khoản với tên người dùng đã nhập
         db.collection("accounts")
