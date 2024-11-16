@@ -72,6 +72,11 @@ public class StudentFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         LinearLayout btnArrange = rootView.findViewById(R.id.btnArrange);
+        LinearLayout btnImport =rootView.findViewById(R.id.btnImport);
+        if(Role.toLowerCase().equals("employee"))
+        {
+            btnImport.setVisibility(View.GONE);
+        }
         btnArrange.setOnClickListener(v -> {
             SortDialogFragment sortDialogFragment = new SortDialogFragment();
             // Pass the current sort criteria to the dialog
@@ -135,7 +140,7 @@ public class StudentFragment extends Fragment {
 
                         // Create the StudentAdapter and set the RecyclerView
                         if (getContext() != null) {
-                            studentAdapter = new StudentAdapter(getContext(), studentList);
+                            studentAdapter = new StudentAdapter(getContext(), studentList, Role);
                             recyclerView.setAdapter(studentAdapter);
                         }
                     }

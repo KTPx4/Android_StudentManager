@@ -24,10 +24,12 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     private List<Student> studentList;
     private Context context;
+    private String Role;
     // Constructor
-    public StudentAdapter(Context context, List<Student> studentList) {
+    public StudentAdapter(Context context, List<Student> studentList, String Role) {
         this.context = context;
         this.studentList = studentList;
+        this.Role = Role;
     }
 
     @NonNull
@@ -60,17 +62,24 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
                     })
                     .show();
         });
-
+        if(!Role.toLowerCase().equals("admin") && !Role.toLowerCase().equals("manager") )
+        {
+            holder.btnEdit.setVisibility(View.INVISIBLE);
+            holder.btnDelete.setVisibility(View.INVISIBLE);
+        }
         holder.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(context, StudentInfo.class);
             intent.putExtra("studentId", student.getId());
             intent.putExtra("mode", "edit");
+            intent.putExtra("role", Role);
             context.startActivity(intent);
         });
         holder.btnInfo.setOnClickListener(v -> {
             Intent intent = new Intent(context, StudentInfo.class);
             intent.putExtra("studentId", student.getId());
             intent.putExtra("mode", "info");
+            intent.putExtra("role", Role);
+
             context.startActivity(intent);
         });
     }

@@ -44,10 +44,10 @@ public class CertificateAdapter2 extends RecyclerView.Adapter<CertificateAdapter
     @Override
     public void onBindViewHolder(@NonNull CertificateViewHolder2 holder, int position) {
         CertificateModel certificate = certificates.get(position);
-        holder.tvCertificateName.setText(certificate.getCertificateName());
-        holder.tvIssue.setText(certificate.getIssueDate());
-        holder.tvExp.setText(certificate.getExpDate());
-
+        holder.tvCertificateName.setText( "Name: " + certificate.getCertificateName());
+        holder.tvIssue.setText( "Issue Day: "+certificate.getIssueDate());
+        holder.tvExp.setText("Exp Day: "+certificate.getExpDate());
+        holder.tvId.setText("Id: " + certificate.getId());
         if (isEditable) {
 
             holder.btnEdit.setVisibility(View.VISIBLE);
@@ -99,7 +99,7 @@ public class CertificateAdapter2 extends RecyclerView.Adapter<CertificateAdapter
     }
 
     public static class CertificateViewHolder2 extends RecyclerView.ViewHolder {
-        TextView tvCertificateName, tvIssue, tvExp;
+        TextView tvCertificateName, tvIssue, tvExp, tvId;
         Button btnEdit, btnDelete;
 
         public CertificateViewHolder2(@NonNull View itemView) {
@@ -109,6 +109,7 @@ public class CertificateAdapter2 extends RecyclerView.Adapter<CertificateAdapter
             tvExp = itemView.findViewById(R.id.tvExp);
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btn_cer_Delete);
+            tvId = itemView.findViewById(R.id.tvId);
         }
     }
 }
