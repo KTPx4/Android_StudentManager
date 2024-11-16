@@ -295,6 +295,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         else if(item.getItemId() == idStudent)
         {
             action = "students";
+            if(Role.toLowerCase().equals("admin") || Role.toLowerCase().equals("manager"))
+            {
+                btnAdd.setVisibility(View.VISIBLE);
+            }
             toolbar.setTitle("Student Management");
             studentFragment = StudentFragment.newInstance(UserName, Role);
             getSupportFragmentManager()
